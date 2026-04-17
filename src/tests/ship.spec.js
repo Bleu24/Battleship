@@ -4,15 +4,18 @@ describe("Ship suite", () => {
   const ship = new Ship();
 
   test("Hit Function", () => {
-    expect(ship.hit()).toBe(1);
+    ship.hit();
+    expect(ship.timesHit).toBe(1);
   });
 
   test("Hit Function", () => {
-    expect(ship.hit()).toBe(2);
+    ship.hit()
+    expect(ship.timesHit).toBe(2);
   });
 
   test("Hit Function", () => {
-    expect(ship.hit()).toBe(3);
+    ship.hit()
+    expect(ship.timesHit).toBe(3);
   });
 
 
