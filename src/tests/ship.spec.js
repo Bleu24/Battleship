@@ -13,7 +13,7 @@ describe("Ship suite", () => {
   });
 
   test("Hit Function", () => {
-    ship.hit()
+    ship.hit();
     expect(ship.timesHit).toBe(2);
   });
 
@@ -22,7 +22,7 @@ describe("Ship suite", () => {
   });
 
   test("Hit Function", () => {
-    ship.hit()
+    ship.hit();
     expect(ship.timesHit).toBe(3);
   });
 
