@@ -29,5 +29,4 @@ describe("Ship suite", () => {
   test("isSunk Function", () => {
     expect(ship.isSunk()).toBeTruthy();
   });
-
 });
