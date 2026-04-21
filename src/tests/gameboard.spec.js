@@ -2,8 +2,6 @@ import { Ship } from "../classes/Ship";
 import { Gameboard } from "../classes/Gameboard.js";
 
 describe("Gameboard Suite", () => {
-  const gameboard = new Gameboard();
-
   test("Occupied cell", () => {
     const gameboard = new Gameboard();
     const carrier = new Ship(5);
@@ -18,6 +16,7 @@ describe("Gameboard Suite", () => {
   });
 
   test("Receive attack", () => {
+    const gameboard = new Gameboard();
     const carrier = new Ship(5);
 
     gameboard.place(carrier, 0, 0, "horizontal");
@@ -27,6 +26,7 @@ describe("Gameboard Suite", () => {
   });
 
   test("Receive attack (same ship, different coords", () => {
+    const gameboard = new Gameboard();
     const frigate = new Ship(4);
     gameboard.place(frigate, 0, 0, "vertical");
 
