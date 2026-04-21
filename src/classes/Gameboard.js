@@ -23,4 +23,11 @@ export class Gameboard {
   isOccupied(x, y) {
     return this.board[x][y] !== null;
   }
+
+  receiveAttack(x, y) {
+    const ship = this.board[x][y];
+    ship.hit();
+
+    return true;
+  }
 }
