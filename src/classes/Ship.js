@@ -1,5 +1,4 @@
 export class Ship {
-
   length;
   timesHit = 0;
 
@@ -13,5 +12,9 @@ export class Ship {
 
   isSunk() {
     return this.timesHit === this.length;
+  }
+
+  getHealth() {
+    return this.length - this.timesHit;
   }
 }
