@@ -39,4 +39,21 @@ export class Gameboard {
       return true;
     } else cell.shot = "miss";
   }
+
+  getAllShips() {
+    const ships = new Set();
+    for (const row of this.board) {
+      for (const cell of row) {
+        if (cell.ship) {
+          ships.add(cell.ship);
+        }
+      }
+    }
+    return Array.from(ships);
+  }
+
+  getAllSunkenShips() {
+    const ships = this.getAllShips();
+    return ships.filter(ship => ship.isSunk());
+  }
 }
