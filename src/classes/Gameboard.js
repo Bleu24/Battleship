@@ -54,6 +54,6 @@ export class Gameboard {
 
   getAllSunkenShips() {
     const ships = this.getAllShips();
-    return ships.filter(ship => ship.isSunk());
+    return ships.filter((ship) => ship.isSunk());
   }
 }
