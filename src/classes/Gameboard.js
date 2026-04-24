@@ -56,4 +56,12 @@ export class Gameboard {
     const ships = this.getAllShips();
     return ships.filter((ship) => ship.isSunk());
   }
+
+  get size() {
+    let size = 0;
+    for (const row of this.board) {
+      size += row.length;
+    }
+    return size;
+  }
 }
