@@ -1,7 +1,6 @@
 import { EventListener } from "../classes/EventListener.js";
 
 describe("Event Listener", () => {
-
   test("Hit event", () => {
     let result = null;
     EventListener.subscribe("ship:hit", (msg) => {
@@ -12,6 +11,4 @@ describe("Event Listener", () => {
 
     expect(result).toBe("ship hit successfully!");
   });
-
-  expect()
 });
