@@ -73,4 +73,9 @@ describe("Gameboard Suite", () => {
     gameboard.receiveAttack(0, 0);
     expect(gameboard.getAllSunkenShips().length).toBe(1);
   });
+
+  test("Get board size", () => {
+    const gameboard = new Gameboard();
+    expect(gameboard.size).toBe(100);
+  });
 });
