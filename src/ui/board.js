@@ -11,4 +11,6 @@ export const createBoard = () => {
       container.appendChild(cell);
     }
   }
+
+  return container;
 };
