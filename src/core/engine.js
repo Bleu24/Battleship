@@ -1,7 +1,7 @@
-import { EventListener } from "../classes/EventListener";
-import { Gameboard } from "../classes/Gameboard";
-import { Player } from "../classes/Player";
-import { Ship } from "../classes/Ship";
+import { EventListener } from "../classes/EventListener.js";
+import { Gameboard } from "../classes/Gameboard.js";
+import { Player } from "../classes/Player.js";
+import { Ship } from "../classes/Ship.js";
 
 export const engine = (function () {
   const game = { player1: null, player2: null };
