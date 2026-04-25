@@ -38,7 +38,7 @@ export default {
     plugins: [
         new HtmlWebpackPlugin({
             template: "./src/template.html",
-            title: "Basic Template" // change this, this changes the title docs
+            title: "Battleship" // change this, this changes the title docs
         })
     ]
 };
