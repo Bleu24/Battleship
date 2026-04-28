@@ -1,5 +1,4 @@
-import { Game } from "./game.js";
-import { engine } from "../core/engine.js";
+import { Wizard } from "./wizard.js";
 
 export const Home = (function () {
   const container = document.createElement("div");
@@ -20,8 +19,7 @@ export const Home = (function () {
 
   start.addEventListener("click", () => {
     hero.remove();
-    container.appendChild(Game);
-    engine.start();
+    container.appendChild(Wizard);
   });
 
   return container;
