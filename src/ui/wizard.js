@@ -8,7 +8,7 @@ export const Wizard = (function () {
 
   container.className = "wizard";
   prompt.className = "wizard__prompt";
-  prompt.for = "username";
+  prompt.setAttribute("for", "username");
   input.id = "username";
   input.name = "userName";
 
