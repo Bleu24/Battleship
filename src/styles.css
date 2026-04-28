@@ -23,20 +23,24 @@ body {
     height: 100vh;
 }
 
-:root {
+:root {}
 
-}
 
 /*hero*/
 .hero__title {
     margin: 0;
 }
 
-.hero {
+.hero, .wizard {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 1rem;
+}
+
+/* wizard */
+.wizard__prompt {
+    font-size: clamp(5%, 3rem, 5rem);
 }
 
 /* app */
