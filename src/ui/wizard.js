@@ -25,10 +25,11 @@ export const Wizard = (function () {
         input.reportValidity();
         return;
       }
+      const userName = input.value;
       input.setCustomValidity("");
       container.remove();
       app.appendChild(Game);
-      engine.start();
+      engine.start(userName);
     } else {
       input.setCustomValidity("");
     }
