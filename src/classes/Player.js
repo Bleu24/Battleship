@@ -1,7 +1,8 @@
 import { Gameboard } from "./Gameboard.js";
 
 export class Player {
-  constructor() {
+  constructor(name = "AI") {
+    this.name = name;
     this.gameboard = new Gameboard();
   }
 }
