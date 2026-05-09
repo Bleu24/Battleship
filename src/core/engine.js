@@ -4,7 +4,7 @@ import { Gameboard } from "../classes/Gameboard.js";
 import { Player } from "../classes/Player.js";
 import { Ship } from "../classes/Ship.js";
 
-export const engine = (function () {
+export const Engine = (function () {
   const game = {
     ships: {
       carrier: 5,
