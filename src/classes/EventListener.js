@@ -16,4 +16,16 @@ export class EventListener {
       }
     });
   }
+
+  static once(event, fun) {
+    const wrapper = (data) => {
+      fun(data);
+
+      this.listeners[event] = this.listeners[event].filter(
+        (listener) => listener !== wrapper,
+      );
+    };
+
+    this.subscribe(event, wrapper);
+  }
 }
