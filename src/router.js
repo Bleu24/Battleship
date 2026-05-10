@@ -23,5 +23,7 @@ export const Router = {
         app.replaceChildren(Game);
         break;
     }
+
+    return;
   },
 };
