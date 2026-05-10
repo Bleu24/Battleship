@@ -4,6 +4,7 @@ import { Gameboard } from "../classes/Gameboard.js";
 import { Player } from "../classes/Player.js";
 import { Ship } from "../classes/Ship.js";
 
+
 export const Engine = (function () {
   const game = {
     ships: {
@@ -13,22 +14,22 @@ export const Engine = (function () {
       submarine: 3,
       destroyer: 2,
     },
-    turn: null,
-    players: [null, null]
-  };
-
-  const start = (name) => {
-    game.players[0] = new Player(name);
-    game.players[1] = new Player("AI");
-
-    game.turn = game.players[0];
-
+    players: [null, null],
+    currentIndex: 0,
   };
 
   const getState = () => cloneDeep(game);
+  const getActivePlayer = () => cloneDeep(game.players[game.currentIndex]);
+
+  const createPlayer = (name) => {
+    const player = new Player(name);
+    if (!game.players[0]) game.players[0] = player;
+    else game.players[1] = player;
+  };
 
   return {
-    start,
-    getState
+    getState,
+    getActivePlayer,
+    createPlayer,
   };
 })();
