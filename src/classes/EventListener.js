@@ -10,7 +10,8 @@ export class EventListener {
     if (!this.listeners[event]) return;
     this.listeners[event].forEach((cb) => {
       try {
-        cb(data);
+        if (!data) cb();
+        else cb(data);
       } catch (err) {
         console.error("EventListener callback error:", err);
       }
