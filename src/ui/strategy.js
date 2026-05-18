@@ -19,6 +19,9 @@ export const Strategy = (function () {
     button.className = `arsenal__btn`;
     button.dataset.ship = key;
 
+    const [firstLetter, ...rest] = key.split("");
+
+    button.textContent = `${firstLetter.toUpperCase() + rest.join("")}`;
     arsenal.appendChild(button);
   }
 
