@@ -72,3 +72,26 @@ body {
     justify-content: space-evenly;
     width: 100vw;
 }
+
+
+/* strategy */
+.strategy {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    padding: 1rem;
+}
+
+.arsenal {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.arsenal__btn {
+    width: 6.25rem;
+    height: 30px;
+    border: 1px solid black;
+}
