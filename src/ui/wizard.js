@@ -1,5 +1,7 @@
-import { Game } from "./game.js";
-import { engine } from "../core/engine.js";
+import { Engine } from "../core/engine.js";
+import { Router } from "../router.js";
+import { EventListener } from "../classes/EventListener.js";
+import { GameService } from "../services/GameService.js";
 
 export const Wizard = (function () {
   const container = document.createElement("div");
@@ -28,8 +30,14 @@ export const Wizard = (function () {
       const userName = input.value;
       input.setCustomValidity("");
       container.remove();
-      app.appendChild(Game);
-      engine.start(userName);
+
+      EventListener.once("game:start", (data) => {
+        GameService.createPlayer(data.username);
+        Router.route("strategy");
+        EventListener.emit("scene:strategy");
+      });
+
+      EventListener.emit("game:start", { username: userName});
     } else {
       input.setCustomValidity("");
     }
