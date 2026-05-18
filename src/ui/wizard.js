@@ -20,7 +20,6 @@ export const Wizard = (function () {
   container.append(prompt, input);
 
   container.addEventListener("keyup", (e) => {
-    const app = document.querySelector(".app");
     if (e.key === "Enter") {
       if (!input.value) {
         input.setCustomValidity("Username can't be empty!");
