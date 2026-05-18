@@ -1,5 +1,7 @@
 import { createBoard } from "./board.js";
-import { engine } from "../core/engine.js";
+import { Engine } from "../core/engine.js";
+import { GameService } from "../services/GameService.js";
+import { EventListener } from "../classes/EventListener.js";
 
 export const Strategy = (function () {
 
@@ -10,7 +12,7 @@ export const Strategy = (function () {
   stage.className = "strategy";
   arsenal.className = "arsenal";
 
-  const ships = engine.getState().ships;
+  const ships = Engine.getState().ships;
 
   for (const key in ships) {
     const button = document.createElement("button");
@@ -46,4 +48,12 @@ export const Strategy = (function () {
         break;
     }
   });
+
+  EventListener.subscribe("scene:strategy", () => {
+    const player = GameService.getActivePlayer();
+    board.dataset.playerName = player.name;
+  });
+
+  return stage;
+
 })();
