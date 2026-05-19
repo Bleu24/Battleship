@@ -95,3 +95,10 @@ body {
     height: 30px;
     border: 1px solid black;
 }
+
+.boardContainer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
