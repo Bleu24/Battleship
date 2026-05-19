@@ -6,11 +6,13 @@ import { EventListener } from "../classes/EventListener.js";
 export const Strategy = (function () {
 
   const stage = document.createElement("div");
+  const boardContainer = document.createElement("div");
   const board = createBoard();
   const arsenal = document.createElement("div");
 
   stage.className = "strategy";
   arsenal.className = "arsenal";
+  boardContainer.className = "boardContainer";
 
   const ships = Engine.getState().ships;
 
@@ -25,7 +27,8 @@ export const Strategy = (function () {
     arsenal.appendChild(button);
   }
 
-  stage.append(arsenal, board);
+  boardContainer.appendChild(board);
+  stage.append(arsenal, boardContainer);
 
   arsenal.addEventListener("click", (e) => {
     const type = e.target.closest(".arsenal__btn").dataset.ship;
