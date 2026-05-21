@@ -78,4 +78,20 @@ describe("Gameboard Suite", () => {
     const gameboard = new Gameboard();
     expect(gameboard.size).toBe(100);
   });
+
+  test("Remove ship from the board entirely", () => {
+    const gameboard = new Gameboard();
+    const carrier = new Ship(2);
+
+    gameboard.place(carrier, 0, 0, "horizontal");
+
+    expect(gameboard.isOccupied(0, 0)).toBeTruthy();
+    expect(gameboard.isOccupied(0, 1)).toBeTruthy();
+
+    gameboard.remove(carrier);
+
+    expect(gameboard.isOccupied(0, 0)).toBeFalsy();
+    expect(gameboard.isOccupied(0, 1)).toBeFalsy();
+    expect(gameboard.size).toBe(100);
+  })
 });
