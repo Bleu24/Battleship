@@ -64,4 +64,15 @@ export class Gameboard {
     }
     return size;
   }
+
+  remove(ship) {
+    for (const row of this.board) {
+      for (const cell of row) {
+        if (cell.ship === ship) {
+          cell.ship = null;
+        }
+      }
+    }
+  }
+
 }
