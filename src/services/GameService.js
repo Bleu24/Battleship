@@ -1,7 +1,6 @@
 import { Engine } from "../core/engine.js";
 import { Player } from "../classes/Player.js";
 
-
 export const GameService = (function () {
   const getActivePlayer = () => Engine.getActivePlayer();
 
@@ -9,8 +8,11 @@ export const GameService = (function () {
     Engine.createPlayer(name);
   };
 
+  const getShipsDict = () => Engine.getState().ships;
+
   return {
-    createPlayer,
     getActivePlayer,
+    createPlayer,
+    getShipsDict
   };
 })();
