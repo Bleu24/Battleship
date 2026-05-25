@@ -6,7 +6,7 @@ import { EventListener } from "../classes/EventListener.js";
 export const Strategy = (function () {
   const stage = document.createElement("div");
   const boardContainer = document.createElement("div");
-  const board = createBoard();
+  const board = createBoard(true);
   const arsenal = document.createElement("div");
   const orientationBtn = document.createElement("button");
 
@@ -38,6 +38,7 @@ export const Strategy = (function () {
 
   arsenal.addEventListener("click", (e) => {
     const type = e.target.closest(".arsenal__btn");
+    const lastSelected = document.querySelector("[data-selected]");
 
     if (!type) return;
 
@@ -49,29 +50,11 @@ export const Strategy = (function () {
         type.textContent = "Horizontal";
         type.dataset.orientation = "horizontal";
       }
+      return;
     }
 
-    const ship = type.dataset.ship;
-
-    switch (ship) {
-      case "carrier":
-        // handle carrier selection
-        break;
-      case "battleship":
-        // handle battleship selection
-        break;
-      case "cruiser":
-        // handle cruiser selection
-        break;
-      case "submarine":
-        // handle submarine selection
-        break;
-      case "destroyer":
-        // handle destroyer selection
-        break;
-      default:
-        break;
-    }
+    if (lastSelected) lastSelected.removeAttribute("data-selected");
+    type.dataset.selected = true;
   });
 
   EventListener.subscribe("scene:strategy", () => {
