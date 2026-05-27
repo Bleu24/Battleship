@@ -57,9 +57,9 @@ export const Strategy = (function () {
     type.dataset.selected = true;
   });
 
-  EventListener.subscribe("scene:strategy", () => {
-    const player = GameService.getActivePlayer();
+  EventListener.subscribe("scene:strategy", (player) => {
     board.dataset.playerName = player.name;
+    board.id = player.id;
   });
 
   return stage;
