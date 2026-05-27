@@ -15,6 +15,21 @@ export const createBoard = (hover = false) => {
     }
   }
 
+  const renderBoard = (boardState, boardEl) => {
+    for (let x = 0; x < boardState.length; x++) {
+      for (let y = 0; y < boardState[x].length; y++) {
+        const cellEl = boardEl.querySelector(
+          `.cell[data-x="${x}"][data-y="${y}"]`
+        );
+
+        if (!cellEl) continue;
+
+        const hasShip = boardState[x][y].ship !== null;
+        cellEl.classList.toggle("has-ship", hasShip);
+      }
+    }
+  };
+
   const highlight = (cell, orientation, shipLength) => {
     const anchor = { x: parseInt(cell.dataset.x), y: parseInt(cell.dataset.y) };
     const cells = [];
@@ -109,6 +124,13 @@ export const createBoard = (hover = false) => {
       if (!cell) return;
       undoHighlight(cell, orientation, shipLength);
     }
+  });
+
+  container.addEventListener("click", (e) => {
+    const cell = e.target.closest(".cell");
+    const coords = { x: parseInt(cell.dataset.x), y: parseInt(cell.dataset.y) };
+
+
   });
 
   return container;
