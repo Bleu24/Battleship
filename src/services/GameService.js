@@ -1,18 +1,20 @@
 import { Engine } from "../core/engine.js";
-import { Player } from "../classes/Player.js";
 
 export const GameService = (function () {
   const getActivePlayer = () => Engine.getActivePlayer();
 
-  const createPlayer = (name) => {
-    Engine.createPlayer(name);
+  const createPlayer = (id, name) => {
+    Engine.createPlayer(id, name);
   };
 
   const getShipsDict = () => Engine.getState().ships;
 
+  const getPlayer = (id) => Engine.getLocalPlayer(id);
+
   return {
     getActivePlayer,
     createPlayer,
-    getShipsDict
+    getShipsDict,
+    getPlayer
   };
 })();
