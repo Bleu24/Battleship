@@ -25,17 +25,21 @@ export const Wizard = (function () {
         input.reportValidity();
         return;
       }
+
+      const userId = crypto.randomUUID();
       const userName = input.value;
       input.setCustomValidity("");
       container.remove();
 
       EventListener.once("game:start", (data) => {
-        GameService.createPlayer(data.username);
+        GameService.createPlayer(data.id, data.username);
         Router.route("strategy");
-        EventListener.emit("scene:strategy");
+
+        const player = GameService.getPlayer(data.id);
+        EventListener.emit("scene:strategy", player);
       });
 
-      EventListener.emit("game:start", { username: userName});
+      EventListener.emit("game:start", { username: userName, id: userId });
     } else {
       input.setCustomValidity("");
     }
