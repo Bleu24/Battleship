@@ -22,8 +22,8 @@ export const Engine = (function () {
   const getState = () => cloneDeep(game);
   const getActivePlayer = () => cloneDeep(game.players[game.currentIndex]);
 
-  const createPlayer = (name) => {
-    const player = new Player(name);
+  const createPlayer = (id, name) => {
+    const player = new Player(id, name);
     SessionService.saveSessionId(player.id);
     if (!game.players[0]) game.players[0] = player;
     else game.players[1] = player;
