@@ -93,5 +93,5 @@ describe("Gameboard Suite", () => {
     expect(gameboard.isOccupied(0, 0)).toBeFalsy();
     expect(gameboard.isOccupied(0, 1)).toBeFalsy();
     expect(gameboard.size).toBe(100);
-  })
+  });
 });
