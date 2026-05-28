@@ -1,6 +1,6 @@
 import { GameService } from "../services/GameService.js";
 
-describe("Game Suite", () => {
+describe("GameService Suite", () => {
 
   test("Create and register player into game", () => {
     const id = crypto.randomUUID();
@@ -17,7 +17,15 @@ describe("Game Suite", () => {
     const player = GameService.getPlayer(id);
 
     expect(player.gameboard.size).toBe(100);
+  });
 
+  test("Get board", () => {
+    const id = crypto.randomUUID();
+    GameService.createPlayer(id, "Bryan");
+    const board = GameService.getBoard(id);
+
+    expect(board).toBeDefined();
+    expect(board.board).toHaveLength(10);
   });
 
 

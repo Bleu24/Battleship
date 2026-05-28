@@ -13,12 +13,12 @@ export class Gameboard {
     switch (orientation) {
       case "horizontal":
         for (let i = 0; i < ship.length; i++) {
-          this.board[x][i].ship = ship;
+          this.board[x][y + i].ship = ship;
         }
         break;
       case "vertical":
         for (let i = 0; i < ship.length; i++) {
-          this.board[i][y].ship = ship;
+          this.board[x + i][y].ship = ship;
         }
         break;
     }
@@ -74,5 +74,4 @@ export class Gameboard {
       }
     }
   }
-
 }

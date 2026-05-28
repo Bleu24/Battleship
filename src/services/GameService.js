@@ -11,10 +11,13 @@ export const GameService = (function () {
 
   const getPlayer = (id) => Engine.getLocalPlayer(id);
 
+  const getBoard = (id) => Engine.getBoard(id);
+
   return {
     getActivePlayer,
     createPlayer,
     getShipsDict,
-    getPlayer
+    getPlayer,
+    getBoard
   };
 })();

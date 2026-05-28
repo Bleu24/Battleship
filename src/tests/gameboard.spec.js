@@ -44,6 +44,7 @@ describe("Gameboard Suite", () => {
     gameboard.place(boat2, 6, 5, "horizontal");
     gameboard.place(boat, 0, 0, "vertical");
     expect(gameboard.getAllShips().length).toBe(2);
+    expect(gameboard.isOccupied(6, 5)).toBeTruthy();
   });
 
   test("Get no. of ships (no duplicate)", () => {

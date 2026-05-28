@@ -1,8 +1,5 @@
 import { cloneDeep } from "lodash";
-import { EventListener } from "../classes/EventListener.js";
-import { Gameboard } from "../classes/Gameboard.js";
 import { Player } from "../classes/Player.js";
-import { Ship } from "../classes/Ship.js";
 import { SessionService } from "../services/SessionService.js";
 
 
@@ -32,15 +29,25 @@ export const Engine = (function () {
   const getLocalPlayer = (id) => {
     for (const player of game.players) {
       if (player.id === id) {
-        return player
+        return player;
       }
     }
-  }
+  };
+
+  const getBoard = (id) => {
+    for (const player of game.players) {
+      if (player.id === id) {
+        return player.gameboard;
+      }
+    }
+  };
+
 
   return {
     getState,
     getActivePlayer,
     createPlayer,
-    getLocalPlayer
+    getLocalPlayer,
+    getBoard
   };
 })();
