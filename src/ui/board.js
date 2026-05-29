@@ -15,16 +15,16 @@ export const createBoard = (hover = false) => {
     }
   }
 
-  const renderBoard = (boardState, boardEl) => {
-    for (let x = 0; x < boardState.length; x++) {
-      for (let y = 0; y < boardState[x].length; y++) {
+  const renderBoard = (gameboard, boardEl) => {
+    for (let x = 0; x < gameboard.board.length; x++) {
+      for (let y = 0; y < gameboard.board[x].length; y++) {
         const cellEl = boardEl.querySelector(
-          `.cell[data-x="${x}"][data-y="${y}"]`
+          `.cell[data-x="${x}"][data-y="${y}"]`,
         );
 
         if (!cellEl) continue;
 
-        const hasShip = boardState[x][y].ship !== null;
+        const hasShip = gameboard.board[x][y].ship !== null;
         cellEl.classList.toggle("has-ship", hasShip);
       }
     }
@@ -37,7 +37,7 @@ export const createBoard = (hover = false) => {
     if (orientation === "horizontal") {
       for (let i = 0; i < shipLength; i++) {
         const c = container.querySelector(
-          `.cell[data-x="${anchor.x}"][data-y="${anchor.y + i}"]`
+          `.cell[data-x="${anchor.x}"][data-y="${anchor.y + i}"]`,
         );
         if (!c) break;
         cells.push(c);
@@ -75,14 +75,14 @@ export const createBoard = (hover = false) => {
     if (orientation === "horizontal") {
       for (let i = 0; i < shipLength; i++) {
         const c = container.querySelector(
-          `.cell[data-x="${anchor.x}"][data-y="${anchor.y + i}"]`
+          `.cell[data-x="${anchor.x}"][data-y="${anchor.y + i}"]`,
         );
         if (!c) break;
         cells.push(c);
       }
 
       for (const cell of cells) {
-        cell.style.backgroundColor = "black";
+        cell.removeAttribute("style");
       }
     } else if (orientation === "vertical") {
       for (let i = 0; i < shipLength; i++) {
@@ -94,7 +94,7 @@ export const createBoard = (hover = false) => {
       }
     }
     for (const cell of cells) {
-      cell.style.backgroundColor = "white";
+      cell.removeAttribute("style");
     }
   };
 
@@ -127,10 +127,20 @@ export const createBoard = (hover = false) => {
   });
 
   container.addEventListener("click", (e) => {
+    const board = document.querySelector(".board");
+    const gameboard = GameService.getBoard(board.id);
+    const shipType = document.querySelector("[data-selected=\"true\"]")?.dataset
+      .ship;
+    const ship = GameService.createShip(shipType);
     const cell = e.target.closest(".cell");
     const coords = { x: parseInt(cell.dataset.x), y: parseInt(cell.dataset.y) };
+    const orientation =
+      document.querySelector("[data-orientation]")?.dataset.orientation;
 
+    if (!gameboard) return;
 
+    GameService.placeShip(gameboard, ship, coords.x, coords.y, orientation);
+    renderBoard(gameboard, board);
   });
 
   return container;
