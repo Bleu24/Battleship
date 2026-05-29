@@ -139,6 +139,11 @@ export const createBoard = (hover = false) => {
 
     if (!gameboard) return;
 
+    if (gameboard.isOccupied(coords.x, coords.y)) {
+      console.error(`cell: ${coords.x}, ${coords.y} is already occupied`);
+      return;
+    }
+
     GameService.placeShip(gameboard, ship, coords.x, coords.y, orientation);
     renderBoard(gameboard, board);
   });
