@@ -8,15 +8,23 @@ export class Gameboard {
   }
 
   place(ship, x, y, orientation) {
-    this.board[x][y].ship = ship;
-
     switch (orientation) {
       case "horizontal":
+        if (y + ship.length > this.board[x].length) {
+          console.error("out of bounds");
+          return;
+        }
+
         for (let i = 0; i < ship.length; i++) {
           this.board[x][y + i].ship = ship;
         }
         break;
       case "vertical":
+        if (x + ship.length > this.board.length) {
+          console.error("out of bounds");
+          return;
+        }
+
         for (let i = 0; i < ship.length; i++) {
           this.board[x + i][y].ship = ship;
         }
