@@ -24,7 +24,7 @@ export const createBoard = (hover = false) => {
 
         if (!cellEl) continue;
 
-        const hasShip = gameboard.board[x][y].ship !== null;
+        const hasShip = gameboard.isOccupied(x, y);
         cellEl.classList.toggle("has-ship", hasShip);
       }
     }
