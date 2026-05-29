@@ -13,11 +13,16 @@ export const GameService = (function () {
 
   const getBoard = (id) => Engine.getBoard(id);
 
+  const placeShip = (gameboard, ship, x, y, orientation) => {
+    gameboard.place(ship, x, y, orientation);
+  }
+
   return {
     getActivePlayer,
     createPlayer,
     getShipsDict,
     getPlayer,
-    getBoard
+    getBoard,
+    placeShip
   };
 })();
