@@ -1,3 +1,4 @@
+import { Ship } from "../classes/Ship.js";
 import { Engine } from "../core/engine.js";
 
 export const GameService = (function () {
@@ -15,7 +16,12 @@ export const GameService = (function () {
 
   const placeShip = (gameboard, ship, x, y, orientation) => {
     gameboard.place(ship, x, y, orientation);
-  }
+  };
+
+  const createShip = (shipType) => {
+    const length = getShipsDict()[shipType];
+    return new Ship(length);
+  };
 
   return {
     getActivePlayer,
@@ -23,6 +29,7 @@ export const GameService = (function () {
     getShipsDict,
     getPlayer,
     getBoard,
-    placeShip
+    placeShip,
+    createShip
   };
 })();
