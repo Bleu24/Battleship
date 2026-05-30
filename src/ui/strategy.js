@@ -62,5 +62,11 @@ export const Strategy = (function () {
     board.id = player.id;
   });
 
+  EventListener.subscribe("board:place", () => {
+    const shipBtns = document.querySelectorAll(".arsenal__btn[data-ship]");
+    const filtered = Array.from(shipBtns).filter(btn => !(btn.hasAttribute("data-selected")));
+    arsenal.replaceChildren(...filtered, orientationBtn);
+  });
+
   return stage;
 })();
