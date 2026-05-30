@@ -3,6 +3,7 @@ import { GameService } from "../services/GameService.js";
 
 export const createBoard = (hover = false) => {
   const container = document.createElement("div");
+  let valid = true;
   container.className = "board";
 
   for (let i = 0; i < 10; i++) {
@@ -35,64 +36,80 @@ export const createBoard = (hover = false) => {
     const id = document.querySelector(".board")?.id;
     const anchor = { x: parseInt(cell.dataset.x), y: parseInt(cell.dataset.y) };
     const cells = [];
+    valid = true;
 
     if (orientation === "horizontal") {
       for (let i = 0; i < shipLength; i++) {
         const c = container.querySelector(
           `.cell[data-x="${anchor.x}"][data-y="${anchor.y + i}"]`,
         );
-        if (!c || GameService.isOccupied(id, parseInt(c.dataset.x), parseInt(c.dataset.y))) break;
+
+        if (!c) {
+          valid = false;
+          break;
+        }
+
+        if (GameService.isOccupied(id, parseInt(c.dataset.x), parseInt(c.dataset.y))) {
+          valid = false;
+        };
+
         cells.push(c);
       }
 
       for (const cell of cells) {
-        if (cells.length !== shipLength) {
-          cell.style.backgroundColor = "red";
-        } else {
-          cell.style.backgroundColor = "gray";
-        }
+        cell.style.backgroundColor = valid ? "gray" : "red";
       }
     } else if (orientation === "vertical") {
       for (let i = 0; i < shipLength; i++) {
         const c = container.querySelector(
           `.cell[data-x="${anchor.x + i}"][data-y="${anchor.y}"]`,
         );
-        if (!c || GameService.isOccupied(id, parseInt(c.dataset.x), parseInt(c.dataset.y))) break;
+
+        if (!c) {
+          valid = false;
+          break;
+        }
+
+        if (GameService.isOccupied(id, parseInt(c.dataset.x), parseInt(c.dataset.y))) {
+          valid = false;
+        };
+
         cells.push(c);
       }
     }
     for (const cell of cells) {
-      if (cells.length !== shipLength) {
-        cell.style.backgroundColor = "red";
-      } else {
-        cell.style.backgroundColor = "gray";
-      }
+      cell.style.backgroundColor = valid ? "gray" : "red";
     }
   };
 
   const undoHighlight = (cell, orientation, shipLength) => {
-    const id = document.querySelector(".board")?.id;
     const anchor = { x: parseInt(cell.dataset.x), y: parseInt(cell.dataset.y) };
     const cells = [];
+
 
     if (orientation === "horizontal") {
       for (let i = 0; i < shipLength; i++) {
         const c = container.querySelector(
           `.cell[data-x="${anchor.x}"][data-y="${anchor.y + i}"]`,
         );
-        if (!c || GameService.isOccupied(id, parseInt(c.dataset.x), parseInt(c.dataset.y))) break;
+
+        if (!c) break;
+
         cells.push(c);
       }
 
       for (const cell of cells) {
         cell.removeAttribute("style");
       }
+
     } else if (orientation === "vertical") {
       for (let i = 0; i < shipLength; i++) {
         const c = container.querySelector(
           `.cell[data-x="${anchor.x + i}"][data-y="${anchor.y}"]`,
         );
-        if (!c || GameService.isOccupied(id, parseInt(c.dataset.x), parseInt(c.dataset.y))) break;
+
+        if (!c) break;
+
         cells.push(c);
       }
     }
@@ -142,6 +159,11 @@ export const createBoard = (hover = false) => {
 
     if (gameboard.isOccupied(coords.x, coords.y)) {
       console.error(`cell: ${coords.x}, ${coords.y} is already occupied`);
+      return;
+    }
+
+    if (!valid) {
+      console.error("Invalid move! Try again");
       return;
     }
 
