@@ -1,3 +1,4 @@
+import { EventListener } from "../classes/EventListener.js";
 import { GameService } from "../services/GameService.js";
 
 export const createBoard = (hover = false) => {
@@ -31,6 +32,7 @@ export const createBoard = (hover = false) => {
   };
 
   const highlight = (cell, orientation, shipLength) => {
+    const id = document.querySelector(".board")?.id;
     const anchor = { x: parseInt(cell.dataset.x), y: parseInt(cell.dataset.y) };
     const cells = [];
 
@@ -39,7 +41,7 @@ export const createBoard = (hover = false) => {
         const c = container.querySelector(
           `.cell[data-x="${anchor.x}"][data-y="${anchor.y + i}"]`,
         );
-        if (!c) break;
+        if (!c || GameService.isOccupied(id, parseInt(c.dataset.x), parseInt(c.dataset.y))) break;
         cells.push(c);
       }
 
@@ -55,7 +57,7 @@ export const createBoard = (hover = false) => {
         const c = container.querySelector(
           `.cell[data-x="${anchor.x + i}"][data-y="${anchor.y}"]`,
         );
-        if (!c) break;
+        if (!c || GameService.isOccupied(id, parseInt(c.dataset.x), parseInt(c.dataset.y))) break;
         cells.push(c);
       }
     }
@@ -69,6 +71,7 @@ export const createBoard = (hover = false) => {
   };
 
   const undoHighlight = (cell, orientation, shipLength) => {
+    const id = document.querySelector(".board")?.id;
     const anchor = { x: parseInt(cell.dataset.x), y: parseInt(cell.dataset.y) };
     const cells = [];
 
@@ -77,7 +80,7 @@ export const createBoard = (hover = false) => {
         const c = container.querySelector(
           `.cell[data-x="${anchor.x}"][data-y="${anchor.y + i}"]`,
         );
-        if (!c) break;
+        if (!c || GameService.isOccupied(id, parseInt(c.dataset.x), parseInt(c.dataset.y))) break;
         cells.push(c);
       }
 
@@ -89,7 +92,7 @@ export const createBoard = (hover = false) => {
         const c = container.querySelector(
           `.cell[data-x="${anchor.x + i}"][data-y="${anchor.y}"]`,
         );
-        if (!c) break;
+        if (!c || GameService.isOccupied(id, parseInt(c.dataset.x), parseInt(c.dataset.y))) break;
         cells.push(c);
       }
     }
@@ -98,8 +101,8 @@ export const createBoard = (hover = false) => {
     }
   };
 
-  container.addEventListener("pointerover", (e) => {
-    if (hover) {
+  if (hover) {
+    container.addEventListener("pointerover", (e) => {
       const cell = e.target.closest(".cell");
       const orientation =
         document.querySelector("[data-orientation]")?.dataset.orientation;
@@ -109,11 +112,9 @@ export const createBoard = (hover = false) => {
 
       if (!cell) return;
       highlight(cell, orientation, shipLength);
-    }
-  });
+    });
 
-  container.addEventListener("pointerout", (e) => {
-    if (hover) {
+    container.addEventListener("pointerout", (e) => {
       const cell = e.target.closest(".cell");
       const orientation =
         document.querySelector("[data-orientation]")?.dataset.orientation;
@@ -123,8 +124,8 @@ export const createBoard = (hover = false) => {
 
       if (!cell) return;
       undoHighlight(cell, orientation, shipLength);
-    }
-  });
+    });
+  }
 
   container.addEventListener("click", (e) => {
     const board = document.querySelector(".board");
@@ -146,6 +147,7 @@ export const createBoard = (hover = false) => {
 
     GameService.placeShip(gameboard, ship, coords.x, coords.y, orientation);
     renderBoard(gameboard, board);
+    EventListener.emit("board:place");
   });
 
   return container;
