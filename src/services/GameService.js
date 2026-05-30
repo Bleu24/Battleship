@@ -19,8 +19,13 @@ export const GameService = (function () {
   };
 
   const createShip = (shipType) => {
-    const length = getShipsDict()[shipType];
+    const length = Engine.getState().ships[shipType];
     return new Ship(length);
+  };
+
+  const isOccupied = (id, x, y) => {
+    const player = Engine.getLocalPlayer(id);
+    return player.gameboard.isOccupied(x, y);
   };
 
   return {
@@ -30,6 +35,7 @@ export const GameService = (function () {
     getPlayer,
     getBoard,
     placeShip,
-    createShip
+    createShip,
+    isOccupied
   };
 })();
