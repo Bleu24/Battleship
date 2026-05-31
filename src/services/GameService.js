@@ -1,3 +1,4 @@
+import { cloneDeep } from "lodash";
 import { Ship } from "../classes/Ship.js";
 import { Engine } from "../core/engine.js";
 
@@ -23,9 +24,12 @@ export const GameService = (function () {
     return new Ship(length);
   };
 
-  const isOccupied = (id, x, y) => {
-    const player = Engine.getLocalPlayer(id);
-    return player.gameboard.isOccupied(x, y);
+  const isOccupied = (gameboard, x, y) => {
+    return gameboard.isOccupied(x, y);
+  };
+
+  const getAllShips = (gameboard) => {
+    return cloneDeep(gameboard.getAllShips());
   };
 
   return {
@@ -36,6 +40,7 @@ export const GameService = (function () {
     getBoard,
     placeShip,
     createShip,
-    isOccupied
+    isOccupied,
+    getAllShips
   };
 })();
