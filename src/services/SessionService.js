@@ -4,8 +4,11 @@ export const SessionService = (function () {
     localStorage.setItem("sessionId", sessionId);
   };
 
+  const getSessionId = () => localStorage.getItem("sessionId");
+
 
   return {
-    saveSessionId
+    saveSessionId,
+    getSessionId
   };
 })();
