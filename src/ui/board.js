@@ -1,5 +1,21 @@
 import { EventListener } from "../classes/EventListener.js";
 import { GameService } from "../services/GameService.js";
+import { Router } from "../router.js";
+
+export const renderBoard = (gameboard, boardEl) => {
+  for (let x = 0; x < gameboard.board.length; x++) {
+    for (let y = 0; y < gameboard.board[x].length; y++) {
+      const cellEl = boardEl.querySelector(
+        `.cell[data-x="${x}"][data-y="${y}"]`,
+      );
+
+      if (!cellEl) continue;
+
+      const hasShip = gameboard.isOccupied(x, y);
+      cellEl.classList.toggle("has-ship", hasShip);
+    }
+  }
+};
 
 export const createBoard = (hover = false) => {
   const container = document.createElement("div");
@@ -10,27 +26,12 @@ export const createBoard = (hover = false) => {
     for (let j = 0; j < 10; j++) {
       const cell = document.createElement("div");
       cell.className = "cell";
-      cell.dataset.x = i;
+      cell.x = i;
       cell.dataset.y = j;
 
       container.appendChild(cell);
     }
   }
-
-  const renderBoard = (gameboard, boardEl) => {
-    for (let x = 0; x < gameboard.board.length; x++) {
-      for (let y = 0; y < gameboard.board[x].length; y++) {
-        const cellEl = boardEl.querySelector(
-          `.cell[data-x="${x}"][data-y="${y}"]`,
-        );
-
-        if (!cellEl) continue;
-
-        const hasShip = gameboard.isOccupied(x, y);
-        cellEl.classList.toggle("has-ship", hasShip);
-      }
-    }
-  };
 
   const highlight = (cell, orientation, shipLength) => {
     const id = document.querySelector(".board")?.id;
@@ -157,7 +158,6 @@ export const createBoard = (hover = false) => {
       return;
     }
 
-    //TODO: If all ships are placed proceed to the actual game
 
 
     if (!valid) {
@@ -170,6 +170,11 @@ export const createBoard = (hover = false) => {
     GameService.placeShip(gameboard, ship, coords.x, coords.y, orientation);
     renderBoard(gameboard, board);
     EventListener.emit("board:place");
+
+    if (GameService.getAllShips(gameboard).length === 5) {
+      Router.route("game");
+      EventListener.emit("game:start", GameService.getPlayer(board.id));
+    }
   });
 
   return container;
