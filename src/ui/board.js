@@ -34,6 +34,7 @@ export const createBoard = (hover = false) => {
 
   const highlight = (cell, orientation, shipLength) => {
     const id = document.querySelector(".board")?.id;
+    const gameboard = GameService.getBoard(id);
     const anchor = { x: parseInt(cell.dataset.x), y: parseInt(cell.dataset.y) };
     const cells = [];
     valid = true;
@@ -49,7 +50,7 @@ export const createBoard = (hover = false) => {
           break;
         }
 
-        if (GameService.isOccupied(id, parseInt(c.dataset.x), parseInt(c.dataset.y))) {
+        if (GameService.isOccupied(gameboard, parseInt(c.dataset.x), parseInt(c.dataset.y))) {
           valid = false;
         };
 
@@ -70,7 +71,7 @@ export const createBoard = (hover = false) => {
           break;
         }
 
-        if (GameService.isOccupied(id, parseInt(c.dataset.x), parseInt(c.dataset.y))) {
+        if (GameService.isOccupied(gameboard, parseInt(c.dataset.x), parseInt(c.dataset.y))) {
           valid = false;
         };
 
@@ -121,10 +122,8 @@ export const createBoard = (hover = false) => {
   if (hover) {
     container.addEventListener("pointerover", (e) => {
       const cell = e.target.closest(".cell");
-      const orientation =
-        document.querySelector("[data-orientation]")?.dataset.orientation;
-      const ship = document.querySelector("[data-selected=\"true\"]")?.dataset
-        .ship;
+      const orientation = document.querySelector("[data-orientation]")?.dataset.orientation;
+      const ship = document.querySelector("[data-selected=\"true\"]")?.dataset.ship;
       const shipLength = ship ? GameService.getShipsDict()[ship] : 0;
 
       if (!cell) return;
@@ -133,10 +132,8 @@ export const createBoard = (hover = false) => {
 
     container.addEventListener("pointerout", (e) => {
       const cell = e.target.closest(".cell");
-      const orientation =
-        document.querySelector("[data-orientation]")?.dataset.orientation;
-      const ship = document.querySelector("[data-selected=\"true\"]")?.dataset
-        .ship;
+      const orientation = document.querySelector("[data-orientation]")?.dataset.orientation;
+      const ship = document.querySelector("[data-selected=\"true\"]")?.dataset.ship;
       const shipLength = ship ? GameService.getShipsDict()[ship] : 0;
 
       if (!cell) return;
@@ -147,13 +144,11 @@ export const createBoard = (hover = false) => {
   container.addEventListener("click", (e) => {
     const board = document.querySelector(".board");
     const gameboard = GameService.getBoard(board.id);
-    const shipType = document.querySelector("[data-selected=\"true\"]")?.dataset
-      .ship;
+    const shipType = document.querySelector("[data-selected=\"true\"]")?.dataset.ship;
     const ship = GameService.createShip(shipType);
     const cell = e.target.closest(".cell");
     const coords = { x: parseInt(cell.dataset.x), y: parseInt(cell.dataset.y) };
-    const orientation =
-      document.querySelector("[data-orientation]")?.dataset.orientation;
+    const orientation = document.querySelector("[data-orientation]")?.dataset.orientation;
 
     if (!gameboard) return;
 
@@ -162,10 +157,15 @@ export const createBoard = (hover = false) => {
       return;
     }
 
+    //TODO: If all ships are placed proceed to the actual game
+
+
     if (!valid) {
       console.error("Invalid move! Try again");
       return;
     }
+
+
 
     GameService.placeShip(gameboard, ship, coords.x, coords.y, orientation);
     renderBoard(gameboard, board);
