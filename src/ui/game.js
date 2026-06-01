@@ -1,4 +1,5 @@
 import { EventListener } from "../classes/EventListener.js";
+import { Player } from "../classes/Player.js";
 import { GameService } from "../services/GameService.js";
 import { createBoard, renderBoard } from "./board.js";
 
@@ -9,6 +10,8 @@ export const Game = (function () {
   const p2_board = createBoard();
 
   EventListener.subscribe("game:start", (player) => {
+    if (!(player instanceof Player)) return;
+
     const gameboard = GameService.getBoard(player.id);
     p1_board.id = player.id;
     p1_board.dataset.playerName = player.name;
