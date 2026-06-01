@@ -60,6 +60,11 @@ export class Gameboard {
     return Array.from(ships);
   }
 
+  getShipFromCoordinate(x, y) {
+    return this.board[x][y].ship;
+  }
+
+
   getAllSunkenShips() {
     const ships = this.getAllShips();
     return ships.filter((ship) => ship.isSunk());
