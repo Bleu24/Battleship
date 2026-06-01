@@ -106,3 +106,8 @@ body {
     justify-content: center;
     align-items: center;
 }
+
+.remove[data-enabled="true"] {
+    background-color: red;
+    color: white;
+}
