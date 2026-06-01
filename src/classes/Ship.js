@@ -1,9 +1,11 @@
 export class Ship {
   length;
   timesHit = 0;
+  type;
 
-  constructor(length = 0) {
+  constructor(length = 0, type = null) {
     this.length = length;
+    this.type = type;
   }
 
   hit() {
