@@ -1,5 +1,4 @@
 import { createBoard } from "./board.js";
-import { Engine } from "../core/engine.js";
 import { GameService } from "../services/GameService.js";
 import { EventListener } from "../classes/EventListener.js";
 
@@ -18,7 +17,7 @@ export const Strategy = (function () {
   orientationBtn.textContent = "Horizontal";
   orientationBtn.dataset.orientation = "horizontal";
 
-  const ships = Engine.getState().ships;
+  const ships = GameService.getShipsDict();
 
   for (const key in ships) {
     const button = document.createElement("button");
@@ -41,6 +40,15 @@ export const Strategy = (function () {
     const lastSelected = document.querySelector("[data-selected]");
 
     if (!type) return;
+
+    if (type.classList.contains("remove")) {
+      if (lastSelected) lastSelected.removeAttribute("data-selected");
+      const isEnabled = !JSON.parse(type.dataset.enabled);
+      type.dataset.enabled = isEnabled;
+      EventListener.emit("remove:clicked", isEnabled);
+      return;
+
+    }
 
     if (type.hasAttribute("data-orientation")) {
       if (type.textContent === "Horizontal") {
@@ -65,7 +73,20 @@ export const Strategy = (function () {
   EventListener.subscribe("board:place", () => {
     const shipBtns = document.querySelectorAll(".arsenal__btn[data-ship]");
     const filtered = Array.from(shipBtns).filter(btn => !(btn.hasAttribute("data-selected")));
-    arsenal.replaceChildren(...filtered, orientationBtn);
+    const removeBtn = document.querySelector(".remove") || document.createElement("button");
+
+    if (!removeBtn.classList.contains("remove")) {
+      removeBtn.className = "arsenal__btn";
+      removeBtn.classList.add("remove");
+      removeBtn.dataset.enabled = false;
+      removeBtn.textContent = "Remove";
+    }
+
+    arsenal.replaceChildren(...filtered, orientationBtn, removeBtn);
+  });
+
+  EventListener.subscribe("board:remove", () => {
+
   });
 
   return stage;
