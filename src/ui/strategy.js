@@ -38,6 +38,7 @@ export const Strategy = (function () {
   arsenal.addEventListener("click", (e) => {
     const type = e.target.closest(".arsenal__btn");
     const lastSelected = document.querySelector("[data-selected]");
+    const removeBtn = document.querySelector(".remove");
 
     if (!type) return;
 
@@ -62,6 +63,9 @@ export const Strategy = (function () {
     }
 
     if (lastSelected) lastSelected.removeAttribute("data-selected");
+
+    if (removeBtn) removeBtn.dataset.enabled = false;
+
     type.dataset.selected = true;
   });
 
@@ -85,8 +89,20 @@ export const Strategy = (function () {
     arsenal.replaceChildren(...filtered, orientationBtn, removeBtn);
   });
 
-  EventListener.subscribe("board:remove", () => {
+  // Restores button of the ship removed
+  EventListener.subscribe("board:remove", (removedShip) => {
+    const shipBtns = Array.from(document.querySelectorAll(".arsenal__btn[data-ship"));
+    const removeBtn = document.querySelector(".remove");
+    const restoredBtn = document.createElement("button");
+    const [first, ...rest] = removedShip.type.split("");
 
+    restoredBtn.textContent = `${first.toUpperCase() + rest.join("")}`;
+    restoredBtn.className = "arsenal__btn";
+    restoredBtn.dataset.ship = removedShip.type;
+
+    shipBtns.unshift(restoredBtn);
+
+    arsenal.replaceChildren(...shipBtns, orientationBtn, removeBtn);
   });
 
   return stage;
