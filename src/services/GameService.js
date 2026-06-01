@@ -35,10 +35,19 @@ export const GameService = (function () {
     return cloneDeep(gameboard.getAllShips());
   };
 
+  const getShip = (id, x, y) => {
+    // use actual gameboard since ships don't have identifiers
+    const gameboard = Engine.getBoard(id);
+    return gameboard.getShipFromCoordinate(x,y);
+
+  };
+
   const removeShip = (id, ship) => {
     const gameboard = Engine.getBoard(id);
     gameboard.remove(ship);
   };
+
+
 
   return {
     getActivePlayer,
@@ -50,6 +59,7 @@ export const GameService = (function () {
     createShip,
     isOccupied,
     getAllShips,
-    removeShip
+    getShip,
+    removeShip,
   };
 })();
