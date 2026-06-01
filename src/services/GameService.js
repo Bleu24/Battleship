@@ -22,7 +22,7 @@ export const GameService = (function () {
 
   const createShip = (shipType) => {
     const length = Engine.getState().ships[shipType];
-    return new Ship(length);
+    return new Ship(length, shipType);
   };
 
   const isOccupied = (id, x, y) => {
