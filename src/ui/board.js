@@ -13,6 +13,7 @@ export const renderBoard = (gameboard, boardEl) => {
 
       const hasShip = gameboard.isOccupied(x, y);
       cellEl.classList.toggle("has-ship", hasShip);
+      cellEl.classList.remove("hovered");
     }
   }
 };
@@ -20,6 +21,7 @@ export const renderBoard = (gameboard, boardEl) => {
 export const createBoard = (hover = false) => {
   const container = document.createElement("div");
   let valid = true;
+  let remove = false;
   container.className = "board";
 
   for (let i = 0; i < 10; i++) {
@@ -35,7 +37,6 @@ export const createBoard = (hover = false) => {
 
   const highlight = (cell, orientation, shipLength) => {
     const id = document.querySelector(".board")?.id;
-    const gameboard = GameService.getBoard(id);
     const anchor = { x: parseInt(cell.dataset.x), y: parseInt(cell.dataset.y) };
     const cells = [];
     valid = true;
@@ -51,7 +52,7 @@ export const createBoard = (hover = false) => {
           break;
         }
 
-        if (GameService.isOccupied(gameboard, parseInt(c.dataset.x), parseInt(c.dataset.y))) {
+        if (GameService.isOccupied(id, parseInt(c.dataset.x), parseInt(c.dataset.y))) {
           valid = false;
         };
 
@@ -59,7 +60,8 @@ export const createBoard = (hover = false) => {
       }
 
       for (const cell of cells) {
-        cell.style.backgroundColor = valid ? "gray" : "red";
+        cell.classList.add("hovered");
+        if (!valid) cell.classList.add("invalid");
       }
     } else if (orientation === "vertical") {
       for (let i = 0; i < shipLength; i++) {
@@ -72,7 +74,7 @@ export const createBoard = (hover = false) => {
           break;
         }
 
-        if (GameService.isOccupied(gameboard, parseInt(c.dataset.x), parseInt(c.dataset.y))) {
+        if (GameService.isOccupied(id, parseInt(c.dataset.x), parseInt(c.dataset.y))) {
           valid = false;
         };
 
@@ -80,7 +82,8 @@ export const createBoard = (hover = false) => {
       }
     }
     for (const cell of cells) {
-      cell.style.backgroundColor = valid ? "gray" : "red";
+      cell.classList.add("hovered");
+      if (!valid) cell.classList.add("invalid");
     }
   };
 
@@ -101,7 +104,7 @@ export const createBoard = (hover = false) => {
       }
 
       for (const cell of cells) {
-        cell.removeAttribute("style");
+        cell.classList.remove("hovered", "invalid");
       }
 
     } else if (orientation === "vertical") {
@@ -116,7 +119,7 @@ export const createBoard = (hover = false) => {
       }
     }
     for (const cell of cells) {
-      cell.removeAttribute("style");
+      cell.classList.remove("hovered", "invalid");
     }
   };
 
@@ -144,37 +147,47 @@ export const createBoard = (hover = false) => {
 
   container.addEventListener("click", (e) => {
     const board = document.querySelector(".board");
-    const gameboard = GameService.getBoard(board.id);
-    const shipType = document.querySelector("[data-selected=\"true\"]")?.dataset.ship;
-    const ship = GameService.createShip(shipType);
     const cell = e.target.closest(".cell");
     const coords = { x: parseInt(cell.dataset.x), y: parseInt(cell.dataset.y) };
-    const orientation = document.querySelector("[data-orientation]")?.dataset.orientation;
 
-    if (!gameboard) return;
-
-    if (gameboard.isOccupied(coords.x, coords.y)) {
-      console.error(`cell: ${coords.x}, ${coords.y} is already occupied`);
+    // Assumes there is atleast one ship available and remove is set to true
+    if (remove && GameService.isOccupied(board.id, coords.x, coords.y)) {
+      // targetShip uses actual object reference since there is no identifier
+      const targetShip = GameService.getShip(board.id, coords.x, coords.y);
+      GameService.removeShip(board.id, targetShip);
+      const gameboard = GameService.getBoard(board.id);
+      renderBoard(gameboard, board);
       return;
     }
 
 
+    const shipType = document.querySelector("[data-selected=\"true\"]")?.dataset.ship;
+    const ship = GameService.createShip(shipType);
+    const orientation = document.querySelector("[data-orientation]")?.dataset.orientation;
+
+    if (GameService.isOccupied(board.id, coords.x, coords.y)) {
+      console.error(`cell: ${coords.x}, ${coords.y} is already occupied`);
+      return;
+    }
 
     if (!valid) {
       console.error("Invalid move! Try again");
       return;
     }
 
-
-
-    GameService.placeShip(gameboard, ship, coords.x, coords.y, orientation);
+    GameService.placeShip(board.id, ship, coords.x, coords.y, orientation);
+    const gameboard = GameService.getBoard(board.id);
     renderBoard(gameboard, board);
     EventListener.emit("board:place");
 
-    if (GameService.getAllShips(gameboard).length === 5) {
+    if (GameService.getAllShips(board.id).length === 5) {
       Router.route("game");
       EventListener.emit("game:start", GameService.getPlayer(board.id));
     }
+  });
+
+  EventListener.subscribe("remove:clicked", (isEnabled) => {
+    remove = isEnabled;
   });
 
   return container;
