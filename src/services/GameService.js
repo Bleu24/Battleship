@@ -13,9 +13,10 @@ export const GameService = (function () {
 
   const getPlayer = (id) => Engine.getLocalPlayer(id);
 
-  const getBoard = (id) => Engine.getBoard(id);
+  const getBoard = (id) => cloneDeep(Engine.getBoard(id));
 
-  const placeShip = (gameboard, ship, x, y, orientation) => {
+  const placeShip = (id, ship, x, y, orientation) => {
+    const gameboard = Engine.getBoard(id);
     gameboard.place(ship, x, y, orientation);
   };
 
@@ -24,12 +25,19 @@ export const GameService = (function () {
     return new Ship(length);
   };
 
-  const isOccupied = (gameboard, x, y) => {
+  const isOccupied = (id, x, y) => {
+    const gameboard = getBoard(id);
     return gameboard.isOccupied(x, y);
   };
 
-  const getAllShips = (gameboard) => {
+  const getAllShips = (id) => {
+    const gameboard = getBoard(id);
     return cloneDeep(gameboard.getAllShips());
+  };
+
+  const removeShip = (id, ship) => {
+    const gameboard = Engine.getBoard(id);
+    gameboard.remove(ship);
   };
 
   return {
@@ -41,6 +49,7 @@ export const GameService = (function () {
     placeShip,
     createShip,
     isOccupied,
-    getAllShips
+    getAllShips,
+    removeShip
   };
 })();
