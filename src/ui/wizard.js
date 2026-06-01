@@ -2,6 +2,7 @@ import { Router } from "../router.js";
 import { EventListener } from "../classes/EventListener.js";
 import { GameService } from "../services/GameService.js";
 
+// TODO: Add difficulty, pvp, and pvai
 export const Wizard = (function () {
   const container = document.createElement("div");
   const prompt = document.createElement("label");
