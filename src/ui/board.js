@@ -157,6 +157,8 @@ export const createBoard = (hover = false) => {
       GameService.removeShip(board.id, targetShip);
       const gameboard = GameService.getBoard(board.id);
       renderBoard(gameboard, board);
+      EventListener.emit("board:remove", targetShip);
+
       return;
     }
 
