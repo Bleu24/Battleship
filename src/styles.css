@@ -67,6 +67,14 @@ body {
     border-bottom: 1px solid black;
 }
 
+.board .cell.hovered {
+    background-color: gray;
+}
+
+.board .cell.hovered.invalid {
+    background-color: red;
+}
+
 .has-ship {
     background-color: gray;
 }
