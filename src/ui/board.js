@@ -18,7 +18,7 @@ export const renderBoard = (gameboard, boardEl) => {
   }
 };
 
-export const createBoard = (hover = false) => {
+export const createBoard = (strategy = false) => {
   const container = document.createElement("div");
   let valid = true;
   let remove = false;
@@ -123,7 +123,7 @@ export const createBoard = (hover = false) => {
     }
   };
 
-  if (hover) {
+  if (strategy) {
     container.addEventListener("pointerover", (e) => {
       const cell = e.target.closest(".cell");
       const orientation = document.querySelector("[data-orientation]")?.dataset.orientation;
@@ -148,44 +148,58 @@ export const createBoard = (hover = false) => {
   container.addEventListener("click", (e) => {
     const board = document.querySelector(".board");
     const cell = e.target.closest(".cell");
+
+    // Crashes when holding the click and dragging it to other cell
+    if (!cell) return;
+
     const coords = { x: parseInt(cell.dataset.x), y: parseInt(cell.dataset.y) };
 
-    // Assumes there is atleast one ship available and remove is set to true
-    if (remove && GameService.isOccupied(board.id, coords.x, coords.y)) {
-      // targetShip uses actual object reference since there is no identifier
-      const targetShip = GameService.getShip(board.id, coords.x, coords.y);
-      GameService.removeShip(board.id, targetShip);
+    // If strategy mode is enabled
+    if (strategy) {
+      // Assumes there is atleast one ship available and remove is set to true
+      if (remove && GameService.isOccupied(board.id, coords.x, coords.y)) {
+        // targetShip uses actual object reference since there is no identifier
+        const targetShip = GameService.getShip(board.id, coords.x, coords.y);
+        GameService.removeShip(board.id, targetShip);
+        const gameboard = GameService.getBoard(board.id);
+        renderBoard(gameboard, board);
+        EventListener.emit("board:remove", targetShip);
+
+        if (GameService.getAllShips(board.id).length === 0) EventListener.emit("board:empty");
+
+        return;
+      }
+
+      const shipType = document.querySelector("[data-selected=\"true\"]")?.dataset.ship;
+      const ship = GameService.createShip(shipType);
+      const orientation = document.querySelector("[data-orientation]")?.dataset.orientation;
+
+      if (!shipType) return;
+
+      if (GameService.isOccupied(board.id, coords.x, coords.y)) {
+        console.error(`cell: ${coords.x}, ${coords.y} is already occupied`);
+        return;
+      }
+
+      if (!valid) {
+        console.error("Invalid move! Try again");
+        return;
+      }
+
+      GameService.placeShip(board.id, ship, coords.x, coords.y, orientation);
       const gameboard = GameService.getBoard(board.id);
       renderBoard(gameboard, board);
-      EventListener.emit("board:remove", targetShip);
+      if (GameService.getAllShips(board.id).length > 0) EventListener.emit("board:place");
 
-      return;
+      // TODO: add a finalize button
+      if (GameService.getAllShips(board.id).length === 5) {
+        Router.route("game");
+        EventListener.emit("game:start", GameService.getPlayer(board.id));
+      }
     }
 
 
-    const shipType = document.querySelector("[data-selected=\"true\"]")?.dataset.ship;
-    const ship = GameService.createShip(shipType);
-    const orientation = document.querySelector("[data-orientation]")?.dataset.orientation;
-
-    if (GameService.isOccupied(board.id, coords.x, coords.y)) {
-      console.error(`cell: ${coords.x}, ${coords.y} is already occupied`);
-      return;
-    }
-
-    if (!valid) {
-      console.error("Invalid move! Try again");
-      return;
-    }
-
-    GameService.placeShip(board.id, ship, coords.x, coords.y, orientation);
-    const gameboard = GameService.getBoard(board.id);
-    renderBoard(gameboard, board);
-    EventListener.emit("board:place");
-
-    if (GameService.getAllShips(board.id).length === 5) {
-      Router.route("game");
-      EventListener.emit("game:start", GameService.getPlayer(board.id));
-    }
+    // TODO: write a spec for attack
   });
 
   EventListener.subscribe("remove:clicked", (isEnabled) => {
