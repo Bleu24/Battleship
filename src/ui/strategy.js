@@ -105,5 +105,13 @@ export const Strategy = (function () {
     arsenal.replaceChildren(...shipBtns, orientationBtn, removeBtn);
   });
 
+  EventListener.subscribe("board:empty", () => {
+    const removeBtn = document.querySelector(".arsenal__btn.remove");
+    const isEnabled = false;
+    removeBtn.dataset.enabled = isEnabled;
+    EventListener.emit("remove:clicked", isEnabled);
+    removeBtn.remove();
+  });
+
   return stage;
 })();
