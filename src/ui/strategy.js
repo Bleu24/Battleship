@@ -1,6 +1,7 @@
 import { createBoard } from "./board.js";
 import { GameService } from "../services/GameService.js";
 import { EventListener } from "../classes/EventListener.js";
+import { Router } from "../router.js";
 
 export const Strategy = (function () {
   const stage = document.createElement("div");
@@ -51,6 +52,12 @@ export const Strategy = (function () {
 
     }
 
+    if (type.classList.contains("finalize")) {
+      Router.route("game");
+      EventListener.emit("game:start", GameService.getPlayer(board.id));
+      return;
+    }
+
     if (type.hasAttribute("data-orientation")) {
       if (type.textContent === "Horizontal") {
         type.textContent = "Vertical";
@@ -64,7 +71,12 @@ export const Strategy = (function () {
 
     if (lastSelected) lastSelected.removeAttribute("data-selected");
 
-    if (removeBtn) removeBtn.dataset.enabled = false;
+    // if removeBtn is present and not used set everything to false
+    if (removeBtn) {
+      removeBtn.dataset.enabled = false;
+      EventListener.emit("remove:disable");
+
+    }
 
     type.dataset.selected = true;
   });
@@ -90,11 +102,15 @@ export const Strategy = (function () {
   });
 
   // Restores button of the ship removed
-  EventListener.subscribe("board:remove", (removedShip) => {
+  EventListener.subscribe("ship:remove", (removedShip) => {
     const shipBtns = Array.from(document.querySelectorAll(".arsenal__btn[data-ship"));
     const removeBtn = document.querySelector(".remove");
     const restoredBtn = document.createElement("button");
+    const finalizeBtn = document.querySelector(".finalize") || null;
     const [first, ...rest] = removedShip.type.split("");
+
+    if (finalizeBtn) arsenal.removeChild(finalizeBtn);
+
 
     restoredBtn.textContent = `${first.toUpperCase() + rest.join("")}`;
     restoredBtn.className = "arsenal__btn";
@@ -111,6 +127,15 @@ export const Strategy = (function () {
     removeBtn.dataset.enabled = isEnabled;
     EventListener.emit("remove:clicked", isEnabled);
     removeBtn.remove();
+  });
+
+  EventListener.subscribe("board:finalize", () => {
+    const finalizeBtn = document.createElement("button");
+    finalizeBtn.className = "arsenal__btn finalize";
+
+    finalizeBtn.textContent = "Finalize";
+
+    arsenal.appendChild(finalizeBtn);
   });
 
   return stage;
