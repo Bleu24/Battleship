@@ -163,7 +163,7 @@ export const createBoard = (strategy = false) => {
         GameService.removeShip(board.id, targetShip);
         const gameboard = GameService.getBoard(board.id);
         renderBoard(gameboard, board);
-        EventListener.emit("board:remove", targetShip);
+        EventListener.emit("ship:remove", targetShip);
 
         if (GameService.getAllShips(board.id).length === 0) EventListener.emit("board:empty");
 
@@ -191,20 +191,17 @@ export const createBoard = (strategy = false) => {
       renderBoard(gameboard, board);
       if (GameService.getAllShips(board.id).length > 0) EventListener.emit("board:place");
 
-      // TODO: add a finalize button
-      if (GameService.getAllShips(board.id).length === 5) {
-        Router.route("game");
-        EventListener.emit("game:start", GameService.getPlayer(board.id));
-      }
+      if (GameService.getAllShips(board.id).length === 5) EventListener.emit("board:finalize");
+
     }
 
 
     // TODO: write a spec for attack
   });
 
-  EventListener.subscribe("remove:clicked", (isEnabled) => {
-    remove = isEnabled;
-  });
+
+  EventListener.subscribe("remove:clicked", (isEnabled) => remove = isEnabled);
+  EventListener.subscribe("remove:disable", () => remove = false);
 
   return container;
 };
