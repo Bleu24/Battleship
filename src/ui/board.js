@@ -1,6 +1,5 @@
 import { EventListener } from "../classes/EventListener.js";
 import { GameService } from "../services/GameService.js";
-import { Router } from "../router.js";
 
 export const renderBoard = (gameboard, boardEl) => {
   for (let x = 0; x < gameboard.board.length; x++) {
