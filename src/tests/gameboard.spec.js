@@ -95,4 +95,39 @@ describe("Gameboard Suite", () => {
     expect(gameboard.isOccupied(0, 1)).toBeFalsy();
     expect(gameboard.size).toBe(100);
   });
+
+  test("can place ship", () => {
+    const gameboard = new Gameboard();
+    const carrier = new Ship(5);
+    const destroyer = new Ship(2);
+
+    gameboard.place(carrier, 0, 0, "horizontal");
+
+    expect(gameboard.canPlace(destroyer, 0, 0, "vertical")).toBeFalsy(); // at first loop returns false immediately
+    expect(gameboard.canPlace(destroyer, 1, 0, "vertical")).toBeTruthy();
+    expect(gameboard.canPlace(destroyer, 0, 9, "horizontal")).toBeFalsy(); // out of bounds
+    expect(gameboard.canPlace(carrier, 6, 0, "vertical")).toBeFalsy(); // out of bounds
+  });
+
+  test("randomize ship placement", () => {
+    const gameboard = new Gameboard();
+    gameboard.randomize();
+    const expected = [
+      { length: 5, timesHit: 0, type: "carrier" },
+      { length: 4, timesHit: 0, type: "battleship" },
+      { length: 3, timesHit: 0, type: "cruiser" },
+      { length: 3, timesHit: 0, type: "submarine" },
+      { length: 2, timesHit: 0, type: "destroyer" },
+    ];
+
+    const actual = gameboard.getAllShips();
+
+    expect(actual.length).toBe(5);
+
+    // AI generated test code
+    expect(actual).toEqual(
+      expect.arrayContaining(expected.map((s) => expect.objectContaining(s)))
+    );
+  });
+
 });
