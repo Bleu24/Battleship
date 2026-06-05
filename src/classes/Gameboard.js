@@ -1,4 +1,5 @@
 import { Ship } from "./Ship.js";
+import { Engine } from "../core/engine.js";
 
 export class Gameboard {
   constructor(size = 10) {
@@ -83,6 +84,47 @@ export class Gameboard {
       for (const cell of row) {
         if (cell.ship === ship) {
           cell.ship = null;
+        }
+      }
+    }
+  }
+
+  canPlace(ship, x, y, orientation) {
+    switch (orientation) {
+      case "horizontal":
+        for (let i = 0; i < ship.length; i++) {
+          if (!this.board[x] ||!this.board[x][y + i]) return false;
+          if (this.isOccupied(x, y + i)) return false;
+        }
+        break;
+      case "vertical":
+        for (let i = 0; i < ship.length; i++) {
+          if (!this.board[x + i] || !this.board[x + i][y]) return false;
+          if (this.isOccupied(x + i, y)) return false;
+        }
+        break;
+    }
+
+    return true;
+  }
+
+  randomize() {
+    const orientations = ["horizontal", "vertical"];
+    const ships = Engine.getState().ships;
+
+    for (const key in ships) {
+      const ship = new Ship(ships[key], key);
+      let placed = false;
+
+      while (!placed) {
+        const x = Math.floor(Math.random() * 10);
+        const y = Math.floor(Math.random() * 10);
+        const idx = Math.floor(Math.random() * 2);
+        const orientation = orientations[idx];
+
+        if (this.canPlace(ship, x, y, orientation)) {
+          this.place(ship, x, y, orientation);
+          placed = true;
         }
       }
     }
