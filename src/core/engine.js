@@ -1,6 +1,5 @@
 import { cloneDeep } from "lodash";
 import { Player } from "../classes/Player.js";
-import { SessionService } from "../services/SessionService.js";
 
 
 export const Engine = (function () {
@@ -21,7 +20,6 @@ export const Engine = (function () {
 
   const createPlayer = (id, name) => {
     const player = new Player(id, name);
-    SessionService.saveSessionId(player.id);
     if (!game.players[0]) game.players[0] = player;
     else game.players[1] = player;
   };
