@@ -1,20 +1,41 @@
 import { EventListener } from "../classes/EventListener.js";
 import { GameService } from "../services/GameService.js";
+import { SessionService } from "../services/SessionService.js";
 
+// TODO: refactor accessing isOccupied
 export const renderBoard = (gameboard, boardEl) => {
-  for (let x = 0; x < gameboard.board.length; x++) {
-    for (let y = 0; y < gameboard.board[x].length; y++) {
-      const cellEl = boardEl.querySelector(
-        `.cell[data-x="${x}"][data-y="${y}"]`,
-      );
+  const isOwnBoard = SessionService.getSessionId("sessionId") === boardEl.id;
 
-      if (!cellEl) continue;
+  if (isOwnBoard) {
+    for (let x = 0; x < gameboard.board.length; x++) {
+      for (let y = 0; y < gameboard.board[x].length; y++) {
+        const cellEl = boardEl.querySelector(
+          `.cell[data-x="${x}"][data-y="${y}"]`,
+        );
 
-      const hasShip = gameboard.isOccupied(x, y);
-      cellEl.classList.toggle("has-ship", hasShip);
-      cellEl.classList.remove("hovered");
+        if (!cellEl) continue;
+
+        const hasShip = gameboard.isOccupied(x, y);
+        cellEl.classList.toggle("has-ship", hasShip);
+        cellEl.classList.remove("hovered");
+      }
+    }
+  } else {
+    for (let x = 0; x < gameboard.board.length; x++) {
+      for (let y = 0; y < gameboard.board[x].length; y++) {
+        const cellEl = boardEl.querySelector(
+          `.cell[data-x="${x}"][data-y="${y}"]`,
+        );
+
+        if (!cellEl) continue;
+
+        const hasShot = gameboard.board[x][y].shot;
+        cellEl.classList.toggle("has-hit", hasShot === "hit");
+        cellEl.classList.toggle("has-miss", hasShot === "miss");
+      }
     }
   }
+
 };
 
 export const createBoard = (strategy = false) => {
@@ -188,14 +209,14 @@ export const createBoard = (strategy = false) => {
       GameService.placeShip(board.id, ship, coords.x, coords.y, orientation);
       const gameboard = GameService.getBoard(board.id);
       renderBoard(gameboard, board);
+
       if (GameService.getAllShips(board.id).length > 0) EventListener.emit("board:place");
-
       if (GameService.getAllShips(board.id).length === 5) EventListener.emit("board:finalize");
-
     }
 
+    // TODO: write a spec for receiving attack
 
-    // TODO: write a spec for attack
+
   });
 
 
