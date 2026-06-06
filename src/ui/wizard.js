@@ -1,6 +1,7 @@
 import { Router } from "../router.js";
 import { EventListener } from "../classes/EventListener.js";
 import { GameService } from "../services/GameService.js";
+import { SessionService } from "../services/SessionService.js";
 
 // TODO: Add difficulty, pvp, and pvai
 export const Wizard = (function () {
@@ -34,6 +35,7 @@ export const Wizard = (function () {
 
       EventListener.once("game:start", (data) => {
         GameService.createPlayer(data.id, data.username);
+        SessionService.saveSessionId(data.id);
         Router.route("strategy");
 
         const player = GameService.getPlayer(data.id);
