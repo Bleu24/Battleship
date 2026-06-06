@@ -6,9 +6,12 @@ export const SessionService = (function () {
 
   const getSessionId = () => localStorage.getItem("sessionId");
 
+  const clearSession = () => localStorage.clear();
+
 
   return {
     saveSessionId,
-    getSessionId
+    getSessionId,
+    clearSession
   };
 })();
