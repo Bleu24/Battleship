@@ -166,8 +166,9 @@ export const createBoard = (strategy = false) => {
   }
 
   container.addEventListener("click", (e) => {
-    const board = document.querySelector(".board");
+    const board = e.target.closest(".board");
     const cell = e.target.closest(".cell");
+
 
     // Crashes when holding the click and dragging it to other cell
     if (!cell) return;
@@ -212,10 +213,26 @@ export const createBoard = (strategy = false) => {
 
       if (GameService.getAllShips(board.id).length > 0) EventListener.emit("board:place");
       if (GameService.getAllShips(board.id).length === 5) EventListener.emit("board:finalize");
+
+      return;
     }
 
     // TODO: write a spec for receiving attack
+    const isOwnShip = SessionService.getSessionId("sessionId") === board.id;
 
+    if (isOwnShip) {
+      console.error("You can't attack your own board");
+      return;
+    }
+
+    GameService.receiveAttack(board.id, coords.x, coords.y);
+
+    if (GameService.getMode() === "pvai") {
+      // Implement ai mode
+    }
+
+    const gameboard = GameService.getBoard(board.id);
+    renderBoard(gameboard, board);
 
   });
 
