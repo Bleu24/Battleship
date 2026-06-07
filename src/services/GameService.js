@@ -47,6 +47,14 @@ export const GameService = (function () {
     gameboard.remove(ship);
   };
 
+  const receiveAttack = (id, x, y) => {
+    const gameboard = Engine.getBoard(id);
+    gameboard.receiveAttack(x, y);
+  };
+
+  const setMode = (mode) => Engine.setMode(mode);
+  const getMode = () => Engine.getMode();
+
 
 
   return {
@@ -61,5 +69,8 @@ export const GameService = (function () {
     getAllShips,
     getShip,
     removeShip,
+    receiveAttack,
+    setMode,
+    getMode
   };
 })();
