@@ -119,3 +119,12 @@ body {
     background-color: red;
     color: white;
 }
+
+/* game */
+.has-miss {
+    background-color: red;
+}
+
+.has-hit {
+    background-color: green;
+}
