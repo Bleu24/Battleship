@@ -13,9 +13,13 @@ export const Engine = (function () {
     },
     players: [null, null],
     currentIndex: 0,
+    mode: "pvai"
   };
 
   const getState = () => cloneDeep(game);
+  const setMode = (mode) => game.mode = mode;
+  const getMode = () => game.mode;
+
   const getActivePlayer = () => cloneDeep(game.players[game.currentIndex]);
 
   const createPlayer = (id, name) => {
@@ -46,6 +50,8 @@ export const Engine = (function () {
     getActivePlayer,
     createPlayer,
     getLocalPlayer,
-    getBoard
+    getBoard,
+    setMode,
+    getMode
   };
 })();
