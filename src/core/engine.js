@@ -17,7 +17,7 @@ export const Engine = (function () {
   };
 
   const getState = () => cloneDeep(game);
-  const setMode = (mode) => game.mode = mode;
+  const setMode = (mode) => { game.mode = mode; };
   const getMode = () => game.mode;
 
   const getActivePlayer = () => cloneDeep(game.players[game.currentIndex]);
@@ -44,6 +44,13 @@ export const Engine = (function () {
     }
   };
 
+  const changeTurn = () => {
+    game.currentIndex = game.currentIndex === 0 ?
+      game.currentIndex = 1 :
+      game.currentIndex = 0;
+  };
+
+
 
   return {
     getState,
@@ -52,6 +59,7 @@ export const Engine = (function () {
     getLocalPlayer,
     getBoard,
     setMode,
-    getMode
+    getMode,
+    changeTurn
   };
 })();
