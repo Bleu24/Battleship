@@ -55,6 +55,8 @@ export const GameService = (function () {
   const setMode = (mode) => Engine.setMode(mode);
   const getMode = () => Engine.getMode();
 
+  const changeTurn = () => Engine.changeTurn();
+
 
 
   return {
@@ -71,6 +73,7 @@ export const GameService = (function () {
     removeShip,
     receiveAttack,
     setMode,
-    getMode
+    getMode,
+    changeTurn
   };
 })();
