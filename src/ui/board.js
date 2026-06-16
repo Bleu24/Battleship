@@ -16,7 +16,11 @@ export const renderBoard = (gameboard, boardEl) => {
         if (!cellEl) continue;
 
         const hasShip = gameboard.isOccupied(x, y);
+        const hasShot = gameboard.board[x][y].shot;
+
         cellEl.classList.toggle("has-ship", hasShip);
+        cellEl.classList.toggle("got-hit", hasShot === "hit");
+        cellEl.classList.toggle("got-miss", hasShot === "miss");
         cellEl.classList.remove("hovered");
       }
     }
@@ -182,6 +186,8 @@ export const createBoard = (strategy = false) => {
         // targetShip uses actual object reference since there is no identifier
         const targetShip = GameService.getShip(board.id, coords.x, coords.y);
         GameService.removeShip(board.id, targetShip);
+
+        // Get updated board state
         const gameboard = GameService.getBoard(board.id);
         renderBoard(gameboard, board);
         EventListener.emit("ship:remove", targetShip);
@@ -217,19 +223,8 @@ export const createBoard = (strategy = false) => {
       return;
     }
 
-    // TODO: write a spec for receiving attack
-    const isOwnShip = SessionService.getSessionId("sessionId") === board.id;
+    EventListener.emit("player:attack", { x: coords.x, y: coords.y, board });
 
-    if (isOwnShip) {
-      console.error("You can't attack your own board");
-      return;
-    }
-
-    GameService.receiveAttack(board.id, coords.x, coords.y);
-
-    if (GameService.getMode() === "pvai") {
-      // Implement ai mode
-    }
 
     const gameboard = GameService.getBoard(board.id);
     renderBoard(gameboard, board);
