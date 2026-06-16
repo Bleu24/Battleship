@@ -1,5 +1,6 @@
 import { Ship } from "./Ship.js";
 import { Engine } from "../core/engine.js";
+import { cloneDeep } from "lodash";
 
 export class Gameboard {
   constructor(size = 10) {
@@ -47,6 +48,8 @@ export class Gameboard {
       cell.shot = "hit";
       return true;
     } else cell.shot = "miss";
+
+    return false;
   }
 
   getAllShips() {
@@ -62,7 +65,7 @@ export class Gameboard {
   }
 
   getShipFromCoordinate(x, y) {
-    return this.board[x][y].ship;
+    return cloneDeep(this.board[x][y].ship);
   }
 
 
@@ -82,7 +85,7 @@ export class Gameboard {
   remove(ship) {
     for (const row of this.board) {
       for (const cell of row) {
-        if (cell.ship === ship) {
+        if (cell.ship?.type === ship.type) {
           cell.ship = null;
         }
       }
