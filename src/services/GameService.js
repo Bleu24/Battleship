@@ -11,7 +11,7 @@ export const GameService = (function () {
 
   const getShipsDict = () => Engine.getState().ships;
 
-  const getPlayer = (id) => Engine.getLocalPlayer(id);
+  const getPlayer = (id) => Engine.getPlayer(id);
 
   const getBoard = (id) => cloneDeep(Engine.getBoard(id));
 
@@ -49,7 +49,7 @@ export const GameService = (function () {
 
   const receiveAttack = (id, x, y) => {
     const gameboard = Engine.getBoard(id);
-    gameboard.receiveAttack(x, y);
+    return gameboard.receiveAttack(x, y);
   };
 
   const setMode = (mode) => Engine.setMode(mode);
