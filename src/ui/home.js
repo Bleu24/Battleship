@@ -1,4 +1,4 @@
-import { Wizard } from "./wizard.js";
+import { Router } from "../router.js";
 
 export const Home = (function () {
   const container = document.createElement("div");
@@ -18,8 +18,7 @@ export const Home = (function () {
   hero.append(heroTitle, start);
 
   start.addEventListener("click", () => {
-    hero.remove();
-    container.appendChild(Wizard);
+    Router.route("Mode");
   });
 
   return container;
