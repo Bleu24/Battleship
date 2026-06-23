@@ -3,7 +3,6 @@ import { GameService } from "../services/GameService.js";
 import { EventListener } from "../classes/EventListener.js";
 import { Router } from "../router.js";
 
-// TODO: refactor to factory
 export const Strategy = () => {
   const stage = document.createElement("div");
   const boardContainer = document.createElement("div");
