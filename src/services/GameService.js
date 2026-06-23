@@ -13,6 +13,8 @@ export const GameService = (function () {
 
   const getPlayer = (id) => Engine.getPlayer(id);
 
+  const getPlayers = () => cloneDeep(Engine.getState().players);
+
   const getBoard = (id) => cloneDeep(Engine.getBoard(id));
 
   const placeShip = (id, ship, x, y, orientation) => {
@@ -37,7 +39,7 @@ export const GameService = (function () {
 
   const getShip = (id, x, y) => {
     // use actual gameboard since ships don't have identifiers
-    const gameboard = Engine.getBoard(id);
+    const gameboard = getBoard(id);
     return gameboard.getShipFromCoordinate(x,y);
 
   };
@@ -64,6 +66,7 @@ export const GameService = (function () {
     createPlayer,
     getShipsDict,
     getPlayer,
+    getPlayers,
     getBoard,
     placeShip,
     createShip,
