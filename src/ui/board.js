@@ -3,10 +3,48 @@ import { GameService } from "../services/GameService.js";
 import { SessionService } from "../services/SessionService.js";
 
 // TODO: refactor accessing isOccupied
-export const renderBoard = (gameboard, boardEl) => {
-  const isOwnBoard = SessionService.getSessionId("sessionId") === boardEl.id;
+export const renderBoard = (gameboard, boardEl, mode = "strategy") => {
 
-  if (isOwnBoard) {
+  if (mode && mode === "pvp") {
+    const isActiveBoard = GameService.getActivePlayer().id === boardEl.id;
+
+    if (isActiveBoard) {
+      for (let x = 0; x < gameboard.board.length; x++) {
+        for (let y = 0; y < gameboard.board[x].length; y++) {
+          const cellEl = boardEl.querySelector(
+            `.cell[data-x="${x}"][data-y="${y}"]`,
+          );
+
+          if (!cellEl) continue;
+
+          const hasShip = gameboard.isOccupied(x, y);
+          const hasShot = gameboard.board[x][y].shot;
+
+          cellEl.classList.toggle("has-ship", hasShip);
+          cellEl.classList.toggle("got-hit", hasShot === "hit");
+          cellEl.classList.toggle("got-miss", hasShot === "miss");
+          cellEl.classList.remove("hovered");
+        }
+      }
+    } else {
+      for (let x = 0; x < gameboard.board.length; x++) {
+        for (let y = 0; y < gameboard.board[x].length; y++) {
+          const cellEl = boardEl.querySelector(
+            `.cell[data-x="${x}"][data-y="${y}"]`,
+          );
+
+          if (!cellEl) continue;
+
+          const hasShot = gameboard.board[x][y].shot;
+          cellEl.classList.toggle("has-hit", hasShot === "hit");
+          cellEl.classList.toggle("has-miss", hasShot === "miss");
+          cellEl.classList.remove("has-ship");
+          cellEl.classList.remove("got-hit");
+          cellEl.classList.remove("got-miss");
+        }
+      }
+    }
+  } else if (mode === "strategy") {
     for (let x = 0; x < gameboard.board.length; x++) {
       for (let y = 0; y < gameboard.board[x].length; y++) {
         const cellEl = boardEl.querySelector(
@@ -16,29 +54,49 @@ export const renderBoard = (gameboard, boardEl) => {
         if (!cellEl) continue;
 
         const hasShip = gameboard.isOccupied(x, y);
-        const hasShot = gameboard.board[x][y].shot;
 
         cellEl.classList.toggle("has-ship", hasShip);
-        cellEl.classList.toggle("got-hit", hasShot === "hit");
-        cellEl.classList.toggle("got-miss", hasShot === "miss");
         cellEl.classList.remove("hovered");
       }
     }
-  } else {
-    for (let x = 0; x < gameboard.board.length; x++) {
-      for (let y = 0; y < gameboard.board[x].length; y++) {
-        const cellEl = boardEl.querySelector(
-          `.cell[data-x="${x}"][data-y="${y}"]`,
-        );
+  } else if (mode === "pvai") {
+    const isOwnBoard = SessionService.getSessionId("sessionId") === boardEl.id;
 
-        if (!cellEl) continue;
+    if (isOwnBoard) {
+      for (let x = 0; x < gameboard.board.length; x++) {
+        for (let y = 0; y < gameboard.board[x].length; y++) {
+          const cellEl = boardEl.querySelector(
+            `.cell[data-x="${x}"][data-y="${y}"]`,
+          );
 
-        const hasShot = gameboard.board[x][y].shot;
-        cellEl.classList.toggle("has-hit", hasShot === "hit");
-        cellEl.classList.toggle("has-miss", hasShot === "miss");
+          if (!cellEl) continue;
+
+          const hasShip = gameboard.isOccupied(x, y);
+          const hasShot = gameboard.board[x][y].shot;
+
+          cellEl.classList.toggle("has-ship", hasShip);
+          cellEl.classList.toggle("got-hit", hasShot === "hit");
+          cellEl.classList.toggle("got-miss", hasShot === "miss");
+          cellEl.classList.remove("hovered");
+        }
+      }
+    } else {
+      for (let x = 0; x < gameboard.board.length; x++) {
+        for (let y = 0; y < gameboard.board[x].length; y++) {
+          const cellEl = boardEl.querySelector(
+            `.cell[data-x="${x}"][data-y="${y}"]`,
+          );
+
+          if (!cellEl) continue;
+
+          const hasShot = gameboard.board[x][y].shot;
+          cellEl.classList.toggle("has-hit", hasShot === "hit");
+          cellEl.classList.toggle("has-miss", hasShot === "miss");
+        }
       }
     }
   }
+
 
 };
 
@@ -173,6 +231,11 @@ export const createBoard = (strategy = false) => {
     const board = e.target.closest(".board");
     const cell = e.target.closest(".cell");
 
+    const activePlayer = GameService.getActivePlayer();
+    const activeGameBoard = GameService.getBoard(activePlayer.id);
+    const activeBoardEl = document.getElementById(activePlayer.id);
+    const mode = GameService.getMode();
+
 
     // Crashes when holding the click and dragging it to other cell
     if (!cell) return;
@@ -227,7 +290,13 @@ export const createBoard = (strategy = false) => {
 
 
     const gameboard = GameService.getBoard(board.id);
-    renderBoard(gameboard, board);
+
+    if (mode === "pvp") {
+      renderBoard(activeGameBoard, activeBoardEl, mode);
+      renderBoard(gameboard, board, mode);
+    }
+
+
 
   });
 
