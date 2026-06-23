@@ -67,7 +67,7 @@ export const Engine = (function () {
     }
   });
 
-  // TODO: Improve ai attack;
+  // TODO: Improve player attack;
   EventListener.subscribe("player:attack", ({ board, x, y }) => {
 
     const isOwnBoard = GameService.getActivePlayer().id === board.id;
