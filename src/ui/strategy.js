@@ -3,12 +3,20 @@ import { GameService } from "../services/GameService.js";
 import { EventListener } from "../classes/EventListener.js";
 import { Router } from "../router.js";
 
-export const Strategy = (function () {
+// TODO: refactor to factory
+export const Strategy = () => {
   const stage = document.createElement("div");
   const boardContainer = document.createElement("div");
   const board = createBoard(true);
   const arsenal = document.createElement("div");
   const orientationBtn = document.createElement("button");
+
+  const subs = [];
+
+  const sub = (event, fun) => {
+    EventListener.subscribe(event, fun);
+    subs.push({ event, fun });
+  };
 
   stage.className = "strategy";
   arsenal.className = "arsenal";
@@ -38,8 +46,8 @@ export const Strategy = (function () {
 
   arsenal.addEventListener("click", (e) => {
     const type = e.target.closest(".arsenal__btn");
-    const lastSelected = document.querySelector("[data-selected]");
-    const removeBtn = document.querySelector(".remove");
+    const lastSelected = arsenal.querySelector("[data-selected]");
+    const removeBtn = arsenal.querySelector(".remove");
 
     if (!type) return;
 
@@ -53,8 +61,22 @@ export const Strategy = (function () {
     }
 
     if (type.classList.contains("finalize")) {
-      Router.route("game");
-      EventListener.emit("game:start", GameService.getPlayer(board.id));
+      if (GameService.getMode() === "pvai") {
+        Router.route("game");
+        EventListener.emit("game:start", GameService.getPlayer(board.id));
+      } else if (GameService.getMode() === "pvp") {
+        const [player1, player2] = GameService.getPlayers();
+        const bothHaveShips = (GameService.getAllShips(player1.id).length === 5 && GameService.getAllShips(player2.id).length === 5);
+
+        if (bothHaveShips) {
+          Router.route("game");
+          EventListener.emit("game:start", [player1, player2]);
+        } else {
+          Router.route("Strategy");
+          EventListener.emit("scene:strategy", player2);
+        }
+
+      }
       return;
     }
 
@@ -81,15 +103,15 @@ export const Strategy = (function () {
     type.dataset.selected = true;
   });
 
-  EventListener.subscribe("scene:strategy", (player) => {
+  EventListener.once("scene:strategy", (player) => {
     board.dataset.playerName = player.name;
     board.id = player.id;
   });
 
-  EventListener.subscribe("board:place", () => {
-    const shipBtns = document.querySelectorAll(".arsenal__btn[data-ship]");
+  sub("board:place", () => {
+    const shipBtns = arsenal.querySelectorAll(".arsenal__btn[data-ship]");
     const filtered = Array.from(shipBtns).filter(btn => !(btn.hasAttribute("data-selected")));
-    const removeBtn = document.querySelector(".remove") || document.createElement("button");
+    const removeBtn = arsenal.querySelector(".remove") || document.createElement("button");
 
     if (!removeBtn.classList.contains("remove")) {
       removeBtn.className = "arsenal__btn";
@@ -102,11 +124,11 @@ export const Strategy = (function () {
   });
 
   // Restores button of the ship removed
-  EventListener.subscribe("ship:remove", (removedShip) => {
-    const shipBtns = Array.from(document.querySelectorAll(".arsenal__btn[data-ship"));
-    const removeBtn = document.querySelector(".remove");
+  sub("ship:remove", (removedShip) => {
+    const shipBtns = Array.from(arsenal.querySelectorAll(".arsenal__btn[data-ship"));
+    const removeBtn = arsenal.querySelector(".remove");
     const restoredBtn = document.createElement("button");
-    const finalizeBtn = document.querySelector(".finalize") || null;
+    const finalizeBtn = arsenal.querySelector(".finalize") || null;
     const [first, ...rest] = removedShip.type.split("");
 
     if (finalizeBtn) arsenal.removeChild(finalizeBtn);
@@ -121,15 +143,15 @@ export const Strategy = (function () {
     arsenal.replaceChildren(...shipBtns, orientationBtn, removeBtn);
   });
 
-  EventListener.subscribe("board:empty", () => {
-    const removeBtn = document.querySelector(".arsenal__btn.remove");
+  sub("board:empty", () => {
+    const removeBtn = arsenal.querySelector(".arsenal__btn.remove");
     const isEnabled = false;
     removeBtn.dataset.enabled = isEnabled;
     EventListener.emit("remove:clicked", isEnabled);
     removeBtn.remove();
   });
 
-  EventListener.subscribe("board:finalize", () => {
+  sub("board:finalize", () => {
     const finalizeBtn = document.createElement("button");
     finalizeBtn.className = "arsenal__btn finalize";
 
@@ -138,5 +160,11 @@ export const Strategy = (function () {
     arsenal.appendChild(finalizeBtn);
   });
 
+  stage.clearsubs = () => {
+    subs.forEach(({ event, fun }) => {
+      EventListener.unsubscribe(event, fun);
+    });
+  };
+
   return stage;
-})();
+};
