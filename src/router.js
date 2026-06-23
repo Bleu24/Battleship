@@ -2,6 +2,7 @@ import { Home } from "./ui/home.js";
 import { Strategy } from "./ui/strategy.js";
 import { Wizard } from "./ui/wizard.js";
 import { Game } from "./ui/game.js";
+import { Mode } from "./ui/mode.js";
 
 export const Router = {
   route(dest) {
@@ -14,13 +15,16 @@ export const Router = {
         app.replaceChildren(Home);
         break;
       case "strategy":
-        app.replaceChildren(Strategy);
+        app.replaceChildren(Strategy());
         break;
       case "wizard":
-        app.replaceChildren(Wizard);
+        app.replaceChildren(Wizard.render());
         break;
       case "game":
         app.replaceChildren(Game);
+        break;
+      case "mode":
+        app.replaceChildren(Mode);
         break;
     }
 
