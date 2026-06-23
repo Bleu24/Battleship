@@ -6,6 +6,11 @@ export class EventListener {
     this.listeners[event].push(fun);
   }
 
+  static unsubscribe(event, fun) {
+    if (!this.listeners[event]) throw new Error("EventListener: No event exists");
+    this.listeners[event] = this.listeners[event].filter(cb => cb !== fun);
+  }
+
   static emit(event, data) {
     if (!this.listeners[event]) return;
     this.listeners[event].forEach((cb) => {
