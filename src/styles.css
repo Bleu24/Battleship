@@ -38,6 +38,28 @@ body {
     gap: 1rem;
 }
 
+/* mode */
+
+.mode {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+
+.modal {
+    display: flex;
+    flex-direction: column;
+}
+
+.modal > div {
+    display: flex;
+    gap: 1rem;
+}
+
+
+
 /* wizard */
 .wizard__prompt {
     font-size: clamp(5%, 3rem, 5rem);
@@ -127,4 +149,12 @@ body {
 
 .has-hit {
     background-color: gray;
+}
+
+.got-miss {
+    background-color: blue;
+}
+
+.got-hit {
+    background-color: red;
 }
