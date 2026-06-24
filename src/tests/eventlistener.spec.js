@@ -11,4 +11,18 @@ describe("Event Listener", () => {
 
     expect(result).toBe("ship hit successfully!");
   });
+
+  test("Unsubscribe all subscriptions", () => {
+    const mock = jest.fn();
+    for (let i = 0; i < 5; i++) {
+      EventListener.subscribe("test", mock);
+    }
+
+    expect(EventListener.listeners).toMatchObject({ "test": [mock, mock, mock, mock, mock ]});
+
+    EventListener.unsubscribeAll();
+
+    expect(EventListener.listeners).toMatchObject({});
+
+  });
 });
