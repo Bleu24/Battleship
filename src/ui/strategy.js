@@ -5,6 +5,7 @@ import { Router } from "../router.js";
 
 export const Strategy = () => {
   const stage = document.createElement("div");
+  const boardLabel = document.createElement("h2");
   const boardContainer = document.createElement("div");
   const board = createBoard(true);
   const arsenal = document.createElement("div");
@@ -18,6 +19,7 @@ export const Strategy = () => {
   };
 
   stage.className = "strategy";
+  boardLabel.className = "strategy__label";
   arsenal.className = "arsenal";
   boardContainer.className = "boardContainer";
   orientationBtn.className = "arsenal__btn";
@@ -40,7 +42,7 @@ export const Strategy = () => {
 
   arsenal.appendChild(orientationBtn);
 
-  boardContainer.appendChild(board);
+  boardContainer.append(boardLabel, board);
   stage.append(arsenal, boardContainer);
 
   arsenal.addEventListener("click", (e) => {
@@ -105,6 +107,7 @@ export const Strategy = () => {
   EventListener.once("scene:strategy", (player) => {
     board.dataset.playerName = player.name;
     board.id = player.id;
+    boardLabel.textContent = `${player.name}'s Board`;
   });
 
   sub("board:place", () => {
