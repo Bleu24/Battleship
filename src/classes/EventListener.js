@@ -34,4 +34,8 @@ export class EventListener {
 
     this.subscribe(event, wrapper);
   }
+
+  static unsubscribeAll() {
+    this.listeners = {};
+  }
 }
