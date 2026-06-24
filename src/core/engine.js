@@ -78,7 +78,11 @@ export const Engine = (function () {
     }
 
     const canChain = GameService.receiveAttack(board.id, x, y);
-    if (!canChain) GameService.changeTurn();
+
+    if (!canChain) {
+      GameService.changeTurn();
+      EventListener.emit("ui:update", GameService.getActivePlayer());
+    }
 
     const ship = GameService.getShip(board.id, x, y);
 
