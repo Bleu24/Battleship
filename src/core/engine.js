@@ -3,6 +3,7 @@ import { Player } from "../classes/Player.js";
 import { EventListener } from "../classes/EventListener.js";
 import { GameService } from "../services/GameService.js";
 import { renderBoard } from "../ui/board.js";
+import { SessionService } from "../services/SessionService.js";
 
 
 export const Engine = (function () {
@@ -71,6 +72,7 @@ export const Engine = (function () {
   EventListener.subscribe("player:attack", ({ board, x, y }) => {
 
     const isOwnBoard = GameService.getActivePlayer().id === board.id;
+    const gamemode = GameService.getMode();
 
     if (isOwnBoard) {
       console.error("You can't attack your own board");
@@ -81,7 +83,7 @@ export const Engine = (function () {
 
     if (!canChain) {
       GameService.changeTurn();
-      EventListener.emit("ui:update", GameService.getActivePlayer());
+      if (gamemode === "pvp") EventListener.emit("ui:update", GameService.getActivePlayer());
     }
 
     const ship = GameService.getShip(board.id, x, y);
@@ -90,6 +92,17 @@ export const Engine = (function () {
 
     const gameboard = getBoard(board.id);
     if (gameboard.getAllSunkenShips().length === 5) console.log(`Winner ${GameService.getActivePlayer().name}`);
+
+    if (gamemode === "pvai" && GameService.getActivePlayer().id !== SessionService.getSessionId() ) {
+      const player1 = GameService.getPlayer(SessionService.getSessionId());
+      const p1_board = document.getElementById(player1.id);
+      const x = Math.floor(Math.random() * 10);
+      const y = Math.floor(Math.random() * 10);
+
+      setTimeout(() => {
+        EventListener.emit("player:attack", { x, y, board: p1_board });
+      }, 5);
+    }
   });
 
   EventListener.once("player:create", (p2_board) => {
