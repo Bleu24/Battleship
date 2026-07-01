@@ -34,7 +34,7 @@ export const Game = (function () {
     const gameboard = GameService.getBoard(player.id);
     p1_board.id = player.id;
     p1_board.dataset.playerName = player.name;
-    activePlayerLabel.textContent = `${player}'s Turn!`;
+    activePlayerLabel.textContent = `${player.name}'s Turn!`;
     renderBoard(gameboard, p1_board);
 
     EventListener.emit("player:create", p2_board);
