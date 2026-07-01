@@ -294,6 +294,12 @@ export const createBoard = (strategy = false) => {
     if (mode === "pvp") {
       renderBoard(activeGameBoard, activeBoardEl, mode);
       renderBoard(gameboard, board, mode);
+    } else {
+      const player = GameService.getPlayer(SessionService.getSessionId());
+      const pGameboard = GameService.getBoard(player.id);
+      const pBoard = document.getElementById(player.id);
+      renderBoard(pGameboard, pBoard, mode);
+      renderBoard(gameboard, board, mode);
     }
 
 
